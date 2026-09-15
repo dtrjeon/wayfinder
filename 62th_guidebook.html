@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>62기 길라잡이</title>
+<title>62기 2단계 전폭훈련 길라잡이</title>
 <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#1a2f4e">
 <meta name="mobile-web-app-capable" content="yes">
@@ -251,12 +251,12 @@
 
 <!-- Top Header -->
 <div class="top-header">
-  <h1>62기 길라잡이</h1>
+  <h1>62기 2단계 전폭훈련 길라잡이</h1>
   <nav class="tab-nav">
-    <button class="tab-btn active" onclick="switchTab('report', this)">📋 62기 전체 현황</button>
+    <button class="tab-btn" onclick="switchTab('report', this)">📋 62기 전체 현황</button>
     <button class="tab-btn" onclick="switchTab('schedule', this)">📅 제62기 일정</button>
     <button class="tab-btn" onclick="switchTab('newbie', this)">📝 훈련자메뉴얼</button>
-    <button class="tab-btn" onclick="switchTab('homework', this)">📎 주차별 과제</button>
+    <button class="tab-btn active" onclick="switchTab('homework', this)">📎 주차별 과제</button>
     <button class="tab-btn" onclick="switchTab('lesson', this)">📖 단계별 수업 진행</button>
   </nav>
 </div>
@@ -264,7 +264,7 @@
 <div class="page">
 
   <!-- ══ TAB 1: 62기 전체 현황 ══ -->
-  <div class="tab-panel active" id="tab-report">
+  <div class="tab-panel" id="tab-report">
 
     <!-- 1. 훈련 기간 -->
     <div class="section">
@@ -282,26 +282,20 @@
     <div class="section">
       <div class="section-title">
         <div class="section-num">2</div>
-        <h2>62기 스탭 운영 계획 (수지주일반)</h2>
+        <h2>수지주일반 스탭 현황</h2>
       </div>
-      <table class="duty-table">
-        <thead>
-          <tr>
-            <th style="width:68px">구분</th>
-            <th style="text-align:left">명단</th>
-          </tr>
-        </thead>
+      <div style="overflow-x:auto;">
+      <table class="duty-table team-table">
         <tbody>
-          <tr>
-            <td class="label-col">교사</td>
-            <td class="names-cell" style="text-align:left">이지혜AS(반장)<br>전태룡A(총무)<br>유정훈F<br>정직희A<br>이은희AI<br>백남A<br>유세미A<br>최현미C</td>
-          </tr>
-          <tr>
-            <td class="label-col">헬퍼</td>
-            <td class="names-cell" style="text-align:left">장유미C(회계)<br>박찬희L(서기)<br>차복심A<br><span class="dim-name">계인선A</span><br><span class="dim-name">장윤수C</span><br><span class="dim-name">정은진G</span><br>박선영<br>안현주</td>
-          </tr>
+          <tr><td>이지혜 반장</td><td>010-3117-7834</td><td>유세미 교사</td><td>010-2326-8805</td><td>박찬희 서기</td><td>010-9217-5413</td></tr>
+          <tr><td>전태룡 총무</td><td>010-2753-7463</td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>유정훈 교사</td><td>010-9967-7963</td><td>계인선 헬퍼(A그룹장)</td><td>010-9008-7122</td><td>박선영 헬퍼(A부그룹장)</td><td>010-6407-7262</td></tr>
+          <tr><td>정직희 교사</td><td>010-4935-1163</td><td>장윤수 헬퍼(B그룹장)</td><td>010-2030-9807</td><td>안현주 헬퍼(B부그룹장)</td><td>010-5337-3699</td></tr>
+          <tr><td>이은희 교사</td><td>010-4425-2369</td><td>최현미 교사(C그룹장)</td><td>010-2508-1775</td><td>차복심 헬퍼(C부그룹장)</td><td>010-2428-2097</td></tr>
+          <tr><td>백남 교사</td><td>010-7616-5040</td><td>정은진 헬퍼(D그룹장)</td><td>010-4745-6596</td><td>장유미 회계(D부그룹장)</td><td>010-3232-7704</td></tr>
         </tbody>
       </table>
+      </div>
       <div class="period-box" style="margin-top:14px;">
         <strong>교사/헬퍼 합계</strong> 8 / 8
         <span class="period-badge">총 16명</span>
@@ -410,24 +404,6 @@
         </tbody>
       </table>
       </div>
-
-      <div style="font-weight:700;color:var(--navy);font-size:13px;margin-bottom:6px;">&lt;교사 및 헬퍼&gt;</div>
-      <div style="overflow-x:auto;">
-      <table class="duty-table team-table">
-        <tbody>
-          <tr><td>이지혜 반장</td><td>010-3117-7834</td><td>유세미 교사</td><td>010-2326-8805</td><td>박찬희 서기</td><td>010-9217-5413</td></tr>
-          <tr><td>전태룡 총무</td><td>010-2753-7463</td><td></td><td></td><td></td><td></td></tr>
-          <tr><td>유정훈 교사</td><td>010-9967-7963</td><td>계인선 헬퍼(A그룹장)</td><td>010-9008-7122</td><td>박선영 헬퍼(A부그룹장)</td><td>010-6407-7262</td></tr>
-          <tr><td>정직희 교사</td><td>010-4935-1163</td><td>장윤수 헬퍼(B그룹장)</td><td>010-2030-9807</td><td>안현주 헬퍼(B부그룹장)</td><td>010-5337-3699</td></tr>
-          <tr><td>이은희 교사</td><td>010-4425-2369</td><td>최현미 교사(C그룹장)</td><td>010-2508-1775</td><td>차복심 헬퍼(C부그룹장)</td><td>010-2428-2097</td></tr>
-          <tr><td>백남 교사</td><td>010-7616-5040</td><td>정은진 헬퍼(D그룹장)</td><td>010-4745-6596</td><td>장유미 회계(D부그룹장)</td><td>010-3232-7704</td></tr>
-        </tbody>
-      </table>
-      </div>
-    </div>
-
-    <div class="tab-footer">
-      <span>2026년 8월 8일</span>
     </div>
   </div>
 
@@ -445,7 +421,7 @@
   </div>
 
   <!-- ══ TAB: 주차별 과제 ══ -->
-  <div class="tab-panel" id="tab-homework">
+  <div class="tab-panel active" id="tab-homework">
     <div class="section">
       <div class="section-title">
         <div class="section-num">1</div>
@@ -725,7 +701,7 @@
 </div>
 <div class="week-card">
   <div class="week-head"><span class="week-badge">3주</span><span class="week-date">9/13</span></div>
-  <div class="week-title">-04과 진단질문의 사용과 분석과 처방</div><div class="week-field"><span class="week-label">예습</span>교과서 p108-121 / [인간] 썩은 계란 요리 예화</div><div class="week-field"><span class="week-label">발표자</span>04과 : 강동우/송유미/조은진</div><div class="week-field"><span class="week-label">암기점검</span>인간</div><div class="week-field"><span class="week-label">비고</span>[질문지전도 주간]</div>
+  <div class="week-title">-04과 진단질문의 사용과 분석과 처방</div><div class="week-field"><span class="week-label">예습</span>교과서 p108-121 / [인간] 썩은 계란 요리 예화</div><div class="week-field"><span class="week-label">발표자</span>04과 : 강동우/송유미/이지연</div><div class="week-field"><span class="week-label">암기점검</span>인간</div><div class="week-field"><span class="week-label">비고</span>[질문지전도 주간]</div>
 </div>
 <div class="week-card">
   <div class="week-head"><span class="week-badge">4주</span><span class="week-date">9/20</span></div>
@@ -1351,6 +1327,13 @@
     cursor: pointer; flex-shrink: 0;
   }
   .hw-upload-btn:disabled { background: var(--muted); cursor: default; }
+  .hw-download-btn {
+    background: white; color: var(--blue); border: 1px solid var(--blue);
+    font-size: 12px; font-weight: 700;
+    padding: 7px 14px; border-radius: 8px;
+    cursor: pointer; flex-shrink: 0;
+  }
+  .hw-download-btn:disabled { color: var(--muted); border-color: var(--muted); cursor: default; }
   .hw-upload-status { font-size: 11px; color: var(--muted); }
   .hw-file-list { display: flex; flex-direction: column; gap: 6px; }
   .hw-file-item {
@@ -1400,6 +1383,28 @@
     { n:14, date:'11/29', off:false, title:'수료식' },
   ];
 
+  const hwFilesByWeek = {};
+
+  function setDownloadBtnState(week) {
+    const dlBtn = document.getElementById(`hwDlBtn-${week}`);
+    if (!dlBtn) return;
+    const files = hwFilesByWeek[week] || [];
+    dlBtn.disabled = files.length === 0;
+    dlBtn.textContent = files.length > 1 ? `다운로드(${files.length})` : '다운로드';
+  }
+
+  function downloadHomework(week) {
+    const files = hwFilesByWeek[week] || [];
+    if (files.length === 0) {
+      alert('아직 등록된 파일이 없습니다.');
+      return;
+    }
+    // 파일이 여러 개면 각각 새 탭으로 모두 열어 개별 다운로드합니다.
+    files.forEach(f => {
+      if (f && f.fileUrl) window.open(f.fileUrl, '_blank', 'noopener');
+    });
+  }
+
   function renderHomeworkWeeks() {
     const wrap = document.getElementById('hwWeeksWrap');
     if (!wrap) return;
@@ -1414,6 +1419,7 @@
         <div class="hw-upload-row">
           <input type="file" class="hw-file-input" id="hwFile-${w.n}">
           <button class="hw-upload-btn" id="hwBtn-${w.n}" onclick="uploadHomework(${w.n})">업로드</button>
+          <button class="hw-download-btn" id="hwDlBtn-${w.n}" onclick="downloadHomework(${w.n})" disabled>다운로드</button>
         </div>
         <div class="hw-upload-status" id="hwStatus-${w.n}"></div>
         <div class="hw-file-list" id="hwFileList-${w.n}">
@@ -1441,6 +1447,7 @@
       HW_WEEKS.forEach(w => {
         const list = document.getElementById(`hwFileList-${w.n}`);
         if (list) list.innerHTML = '<div class="hw-file-empty">아직 등록된 파일이 없습니다.</div>';
+        setDownloadBtnState(w.n);
       });
       return;
     }
@@ -1460,11 +1467,14 @@
         list.innerHTML = items.length
           ? items.map(hwFileItemHtml).join('')
           : '<div class="hw-file-empty">아직 등록된 파일이 없습니다.</div>';
+        hwFilesByWeek[w.n] = items;
+        setDownloadBtnState(w.n);
       });
     } catch (err) {
       HW_WEEKS.forEach(w => {
         const list = document.getElementById(`hwFileList-${w.n}`);
         if (list) list.innerHTML = '<div class="hw-file-empty">목록을 불러오지 못했습니다.</div>';
+        setDownloadBtnState(w.n);
       });
     }
   }
@@ -1506,6 +1516,8 @@
           const empty = list.querySelector('.hw-file-empty');
           if (empty) empty.remove();
           list.insertAdjacentHTML('afterbegin', hwFileItemHtml(result));
+          hwFilesByWeek[week] = [result, ...(hwFilesByWeek[week] || [])];
+          setDownloadBtnState(week);
         } else {
           status.textContent = '❌ 업로드 실패: ' + (result.message || '알 수 없는 오류');
         }
