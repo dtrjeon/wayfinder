@@ -1341,15 +1341,27 @@
     background: var(--light); border-radius: 8px;
     padding: 7px 10px; font-size: 12px;
   }
-  .hw-file-item a { color: var(--navy); font-weight: 600; text-decoration: none; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .hw-file-meta { font-size: 10px; color: var(--muted); flex-shrink: 0; }
-  .hw-file-dl {
-    flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    background: var(--blue); color: white; font-size: 13px;
-    text-decoration: none;
+  .hw-file-item a.hw-file-link {
+    color: var(--navy); font-weight: 600; text-decoration: none;
+    flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; -webkit-touch-callout: none;
   }
+  .hw-file-meta { font-size: 10px; color: var(--muted); flex-shrink: 0; }
   .hw-file-empty { font-size: 11px; color: var(--muted); padding: 4px 2px; }
+  .hw-file-menu {
+    position: fixed; z-index: 999;
+    background: white; border: 1px solid #dee6ef; border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(26,47,78,0.25);
+    overflow: hidden; min-width: 168px;
+  }
+  .hw-file-menu button {
+    display: block; width: 100%; text-align: left;
+    background: none; border: none; cursor: pointer;
+    padding: 12px 16px; font-size: 13px; font-weight: 600;
+    color: var(--text); font-family: 'Noto Sans KR', sans-serif;
+  }
+  .hw-file-menu button + button { border-top: 1px solid #eef2f7; }
+  .hw-file-menu button:active { background: var(--light); }
 </style>
 
 <script>
@@ -1440,11 +1452,15 @@
     const dtLabel = dt && !isNaN(dt)
       ? `${dt.getMonth()+1}/${dt.getDate()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`
       : '';
+    const downloadUrl = item.fileId
+      ? `https://drive.google.com/uc?export=download&id=${item.fileId}`
+      : item.fileUrl;
+    const safeName = String(item.fileName).replace(/"/g, '&quot;');
     return `
       <div class="hw-file-item">
-        <a href="${item.fileUrl}" target="_blank" rel="noopener">📎 ${item.fileName}</a>
+        <a href="${item.fileUrl}" target="_blank" rel="noopener" class="hw-file-link"
+           data-file-url="${item.fileUrl}" data-download-url="${downloadUrl}" data-file-name="${safeName}">📎 ${item.fileName}</a>
         <span class="hw-file-meta">${dtLabel}</span>
-        <a href="${item.fileUrl}" target="_blank" rel="noopener" class="hw-file-dl" title="다운로드">⬇</a>
       </div>
     `;
   }
@@ -1539,6 +1555,70 @@
 
   renderHomeworkWeeks();
   loadHomeworkFiles();
+
+  /* ── 파일 항목: 짧게 누르면 미리보기, 길게 누르면 선택 메뉴 ── */
+  let hwPressTimer = null;
+  let hwLongPressed = false;
+  let hwMenuEl = null;
+
+  function closeHwFileMenu() {
+    if (hwMenuEl) { hwMenuEl.remove(); hwMenuEl = null; }
+  }
+
+  function showHwFileMenu(link, x, y) {
+    closeHwFileMenu();
+    const menu = document.createElement('div');
+    menu.className = 'hw-file-menu';
+    menu.innerHTML = `
+      <button type="button" data-act="open">👁 미리보기로 열기</button>
+      <button type="button" data-act="download">⬇ 다운로드</button>
+    `;
+    document.body.appendChild(menu);
+
+    const rect = menu.getBoundingClientRect();
+    let left = x - rect.width / 2;
+    left = Math.max(8, Math.min(left, window.innerWidth - rect.width - 8));
+    let top = y - rect.height - 12;
+    if (top < 8) top = y + 16;
+    menu.style.left = left + 'px';
+    menu.style.top = top + 'px';
+
+    menu.querySelector('[data-act="open"]').onclick = () => {
+      window.open(link.dataset.fileUrl, '_blank', 'noopener');
+      closeHwFileMenu();
+    };
+    menu.querySelector('[data-act="download"]').onclick = () => {
+      window.open(link.dataset.downloadUrl, '_blank', 'noopener');
+      closeHwFileMenu();
+    };
+    hwMenuEl = menu;
+  }
+
+  document.addEventListener('touchstart', (e) => {
+    const link = e.target.closest('.hw-file-link');
+    if (!link) return;
+    hwLongPressed = false;
+    const t = e.touches[0];
+    const x = t.clientX, y = t.clientY;
+    hwPressTimer = setTimeout(() => {
+      hwLongPressed = true;
+      if (navigator.vibrate) navigator.vibrate(10);
+      showHwFileMenu(link, x, y);
+    }, 480);
+  }, { passive: true });
+
+  document.addEventListener('touchend', () => clearTimeout(hwPressTimer), { passive: true });
+  document.addEventListener('touchmove', () => clearTimeout(hwPressTimer), { passive: true });
+
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('.hw-file-link');
+    if (link && hwLongPressed) {
+      e.preventDefault();
+      hwLongPressed = false;
+      return;
+    }
+    if (hwMenuEl && !hwMenuEl.contains(e.target)) closeHwFileMenu();
+  }, true);
 
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
