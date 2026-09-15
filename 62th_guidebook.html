@@ -1419,7 +1419,7 @@
     }
     // 파일이 여러 개면 각각 새 탭으로 모두 열어 개별 다운로드합니다.
     files.forEach(f => {
-      if (f && f.fileUrl) window.open(f.fileUrl, '_blank', 'noopener');
+      if (f && f.fileUrl) window.open(buildDownloadUrl(f.fileUrl, f.fileId), '_blank', 'noopener');
     });
   }
 
@@ -1447,14 +1447,33 @@
     `).join('');
   }
 
+  // 어떤 형태의 링크(구글독스/시트/슬라이드/드라이브 파일)든
+  // 미리보기가 아닌 "실제 다운로드"가 되는 URL로 변환합니다.
+  function buildDownloadUrl(url, fileId) {
+    if (fileId) return `https://drive.google.com/uc?export=download&id=${fileId}`;
+    if (!url) return url;
+    let m;
+    if ((m = url.match(/docs\.google\.com\/document\/d\/([a-zA-Z0-9_-]+)/))) {
+      return `https://docs.google.com/document/d/${m[1]}/export?format=docx`;
+    }
+    if ((m = url.match(/docs\.google\.com\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/))) {
+      return `https://docs.google.com/spreadsheets/d/${m[1]}/export?format=xlsx`;
+    }
+    if ((m = url.match(/docs\.google\.com\/presentation\/d\/([a-zA-Z0-9_-]+)/))) {
+      return `https://docs.google.com/presentation/d/${m[1]}/export/pptx`;
+    }
+    if ((m = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/))) {
+      return `https://drive.google.com/uc?export=download&id=${m[1]}`;
+    }
+    return url;
+  }
+
   function hwFileItemHtml(item) {
     const dt = item.uploadedAt ? new Date(item.uploadedAt) : null;
     const dtLabel = dt && !isNaN(dt)
       ? `${dt.getMonth()+1}/${dt.getDate()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`
       : '';
-    const downloadUrl = item.fileId
-      ? `https://drive.google.com/uc?export=download&id=${item.fileId}`
-      : item.fileUrl;
+    const downloadUrl = buildDownloadUrl(item.fileUrl, item.fileId);
     const safeName = String(item.fileName).replace(/"/g, '&quot;');
     return `
       <div class="hw-file-item">
