@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>62기 길라잡이</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#1a2f4e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="62기 운영">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@400;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #1a2f4e;
+    --blue: #2c5282;
+    --sky: #4a90c4;
+    --light: #eaf1f8;
+    --accent: #c0392b;
+    --gold: #b8860b;
+    --text: #1e2d3d;
+    --muted: #6b7c93;
+    --bg: #f0f4f9;
+    --white: #ffffff;
+  }
+
+  @media print {
+    body { background: white; }
+    .page { box-shadow: none; max-width: 100%; }
+    .tab-nav { display: none; }
+    .tab-panel { display: block !important; page-break-before: always; }
+    .tab-panel:first-of-type { page-break-before: avoid; }
+  }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── Top Header ── */
+  .top-header {
+    background: var(--navy);
+    color: white;
+    text-align: center;
+    padding: 16px 16px 0;
+  }
+  .top-header .klass {
+    font-size: 11px;
+    letter-spacing: .15em;
+    color: #8ab4d4;
+    margin-bottom: 4px;
+  }
+  .top-header h1 {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    margin-bottom: 12px;
+  }
+
+  /* ── Tab Nav ── */
+  .tab-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: stretch;
+    gap: 0;
+    padding: 0;
+    width: 100%;
+  }
+  .tab-btn {
+    background: rgba(255,255,255,.12);
+    color: rgba(255,255,255,.7);
+    border: none;
+    padding: 12px 6px;
+    border-radius: 0;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    letter-spacing: .02em;
+    transition: background .15s, color .15s;
+    white-space: nowrap;
+    flex: 1 1 33.333%;
+    min-width: 0;
+  }
+  .tab-btn:hover { background: rgba(255,255,255,.2); color: white; }
+  .tab-btn.active {
+    background: var(--bg);
+    color: var(--navy);
+  }
+
+  /* ── Page ── */
+  .page {
+    max-width: 100%;
+    margin: 0 auto;
+    background: var(--white);
+    box-shadow: none;
+    min-height: 60vh;
+  }
+
+  /* ── Tab Panels ── */
+  .tab-panel { display: none; padding: 20px 16px 40px; }
+  .tab-panel.active { display: block; }
+
+  /* ── Section ── */
+  .section { margin-bottom: 40px; }
+  .section-title {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--light);
+  }
+  .section-num {
+    width: 26px; height: 26px;
+    background: var(--navy); color: white;
+    border-radius: 50%;
+    font-size: 12px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title h2 { font-size: 15px; font-weight: 700; color: var(--navy); letter-spacing: .04em; }
+
+  /* ── Collapsible section ── */
+  details.collapsible { border: none; }
+  details.collapsible summary.section-title {
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+  }
+  details.collapsible summary.section-title::-webkit-details-marker { display: none; }
+  .collapse-arrow {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 14px;
+    transition: transform .15s;
+    flex-shrink: 0;
+  }
+  details.collapsible[open] .collapse-arrow { transform: rotate(180deg); }
+
+  /* ── Period ── */
+  .period-box {
+    background: var(--light);
+    border-left: 4px solid var(--sky);
+    padding: 13px 18px;
+    border-radius: 0 6px 6px 0;
+    font-size: 14px; color: var(--navy);
+  }
+  .period-box strong { font-weight: 700; }
+  .period-badge {
+    display: inline-block; margin-left: 10px;
+    background: var(--navy); color: white;
+    font-size: 11px; font-weight: 700;
+    padding: 2px 10px; border-radius: 20px;
+  }
+
+  /* ── Tables ── */
+  .stats-table, .comp-table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+  }
+  .stats-table th, .comp-table th {
+    background: var(--navy); color: white;
+    padding: 9px 12px; font-weight: 600;
+    text-align: center; font-size: 12px; letter-spacing: .03em;
+  }
+  .stats-table td, .comp-table td {
+    padding: 9px 12px; text-align: center;
+    border-bottom: 1px solid #dee6ef; vertical-align: middle;
+  }
+  .stats-table tr:nth-child(odd) td { background: var(--light); }
+  .stats-table tr:nth-child(even) td { background: white; }
+  .stats-table tr.row-61 td { background: #deeaf7; }
+  .stats-table tr.row-61-sub td { background: #eef4fb; border-bottom: 2px solid #b8cfe8; }
+  .stats-table tr.row-60 td { background: #f5f5f5; }
+  .stats-table tr.row-60-sub td { background: #ffffff; }
+  .label-col { font-weight: 600; color: var(--navy); text-align: center; }
+  .muted-val { color: var(--muted); font-size: 11px; }
+  .muted-label { color: var(--muted); font-weight: 400; font-size: 11px; }
+
+  .comp-table tr:nth-child(odd) td { background: var(--light); color: var(--text); }
+  .comp-table tr:nth-child(even) td { background: white; color: var(--text); }
+  .comp-table .stage-cell { text-align: center; font-weight: 700; font-size: 12px; color: white; }
+  .comp-table .count-cell { text-align: center; font-weight: 700; color: var(--navy); }
+  .comp-table .names-cell { text-align: left; line-height: 1.7; color: var(--text); }
+  .comp-table tfoot td {
+    background: var(--navy) !important; color: white;
+    font-weight: 700; text-align: center;
+    padding: 10px 12px; font-size: 13px;
+  }
+
+  .s5 { background: #1a2f4e; }
+  .s4 { background: #1e4272; }
+  .s3 { background: #2c5282; }
+  .s2 { background: #3b6ea5; }
+  .s1 { background: #4a90c4; }
+
+  /* ── Badges ── */
+  .helper-badge {
+    display: inline-block; background: var(--gold); color: white;
+    font-size: 10px; font-weight: 700;
+    padding: 1px 7px; border-radius: 10px; vertical-align: middle;
+  }
+  .rate-highlight { font-weight: 700; color: var(--accent); font-size: 14px; }
+
+  /* ── Rate note ── */
+  .rate-note {
+    margin-top: 10px; font-size: 12px;
+    color: var(--muted); padding-left: 2px;
+  }
+
+  /* ── Placeholder (신임훈련자 / 62기일정) ── */
+  .placeholder {
+    text-align: center; padding: 60px 20px;
+    color: var(--muted);
+  }
+  .placeholder .icon { font-size: 40px; margin-bottom: 16px; }
+  .placeholder p { font-size: 14px; line-height: 1.8; }
+
+  /* ── Footer ── */
+  .tab-footer {
+    margin-top: 40px; padding-top: 20px;
+    border-top: 1px solid #ccd8e5;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; color: var(--muted);
+  }
+  .total-badge {
+    background: var(--navy); color: white;
+    padding: 5px 16px; border-radius: 20px;
+    font-size: 12px; font-weight: 700;
+  }
+
+  /* ── 모바일 최적화 ── */
+  .stats-table, .comp-table { font-size: 12px; }
+  .stats-table th, .comp-table th { padding: 7px 5px; font-size: 11px; }
+  .stats-table td, .comp-table td { padding: 7px 5px; }
+  .comp-table .names-cell { font-size: 11px; line-height: 1.8; color: var(--text); }
+  .section { margin-bottom: 24px; }
+  .tab-footer { flex-direction: column; gap: 8px; text-align: center; }
+  .section-title h2 { font-size: 14px; }
+  .period-box { font-size: 13px; }
+</style>
+</head>
+<body>
+
+<!-- Top Header -->
+<div class="top-header">
+  <h1>62기 길라잡이</h1>
+  <nav class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('report', this)">📋 62기 전체 현황</button>
+    <button class="tab-btn" onclick="switchTab('schedule', this)">📅 제62기 일정</button>
+    <button class="tab-btn" onclick="switchTab('newbie', this)">📝 훈련자메뉴얼</button>
+    <button class="tab-btn" onclick="switchTab('homework', this)">📎 주차별 과제</button>
+    <button class="tab-btn" onclick="switchTab('lesson', this)">📖 단계별 수업 진행</button>
+  </nav>
+</div>
+
+<div class="page">
+
+  <!-- ══ TAB 1: 62기 전체 현황 ══ -->
+  <div class="tab-panel active" id="tab-report">
+
+    <!-- 1. 훈련 기간 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">1</div>
+        <h2>훈련 기간</h2>
+      </div>
+      <div class="period-box">
+        <strong>2026년 8월 30일(일)</strong> ~ <strong>2026년 11월 29일(일)</strong>
+        <span class="period-badge">총 14주</span>
+      </div>
+    </div>
+
+    <!-- 2. 62기 스탭 운영 계획 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">2</div>
+        <h2>62기 스탭 운영 계획 (수지주일반)</h2>
+      </div>
+      <table class="duty-table">
+        <thead>
+          <tr>
+            <th style="width:68px">구분</th>
+            <th style="text-align:left">명단</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">교사</td>
+            <td class="names-cell" style="text-align:left">이지혜AS(반장)<br>전태룡A(총무)<br>유정훈F<br>정직희A<br>이은희AI<br>백남A<br>유세미A<br>최현미C</td>
+          </tr>
+          <tr>
+            <td class="label-col">헬퍼</td>
+            <td class="names-cell" style="text-align:left">장유미C(회계)<br>박찬희L(서기)<br>차복심A<br><span class="dim-name">계인선A</span><br><span class="dim-name">장윤수C</span><br><span class="dim-name">정은진G</span><br>박선영<br>안현주</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="period-box" style="margin-top:14px;">
+        <strong>교사/헬퍼 합계</strong> 8 / 8
+        <span class="period-badge">총 16명</span>
+      </div>
+    </div>
+
+    <!-- 3. 제62기 신청 현황 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">3</div>
+        <h2>제62기 신청 현황</h2>
+      </div>
+      <table class="stats-table">
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>1단계</th>
+            <th>2단계</th>
+            <th>3단계</th>
+            <th>4단계</th>
+            <th>5단계</th>
+            <th>합계</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">신청</td>
+            <td><strong>9명</strong></td>
+            <td><strong>8명</strong></td>
+            <td><strong>9명</strong></td>
+            <td><strong>4명</strong></td>
+            <td><strong>3명</strong></td>
+            <td><strong style="color:var(--navy)">33명</strong></td>
+          </tr>
+          <tr>
+            <td class="label-col">61기 수료자</td>
+            <td class="muted-val">—</td>
+            <td>11명</td>
+            <td>9명</td>
+            <td>6명</td>
+            <td>3명</td>
+            <td><strong style="color:var(--navy)">29명</strong></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 4. 제62기 전도폭발훈련 조 편성 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">4</div>
+        <h2>제62기 전도폭발훈련 조 편성 <span style="font-size:11px;font-weight:400;color:var(--muted);">(Date: 26.08.31)</span></h2>
+      </div>
+
+      <div style="font-weight:700;color:var(--navy);font-size:13px;margin-bottom:6px;">A 그룹장: 계인선(010-9008-7122), 박선영</div>
+      <div style="overflow-x:auto;">
+      <table class="duty-table team-table" style="margin-bottom:20px;">
+        <thead>
+          <tr><th style="width:32px">조</th><th>훈련자(조장)</th><th>전화번호</th><th>훈련자</th><th>전화번호</th><th>훈련생</th><th>전화번호</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>성기현(5)</td><td>010-2239-3739</td><td>최정화(2)</td><td>010-3430-4160</td><td>김소형(1)</td><td>010-7210-4187</td></tr>
+          <tr><td>2</td><td>이지영(4)</td><td>010-8772-7523</td><td>신대용(3)</td><td>010-4614-2405</td><td>이지연(2)</td><td>010-9429-5992</td></tr>
+          <tr><td>3</td><td>안희정(3)</td><td>010-5121-3479</td><td>김진우(2)</td><td>010-7360-5088</td><td>안혜경(1)</td><td>010-4338-5083</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div style="font-weight:700;color:var(--navy);font-size:13px;margin-bottom:6px;">B 그룹장: 장윤수(010-2030-9807), 안현주</div>
+      <div style="overflow-x:auto;">
+      <table class="duty-table team-table" style="margin-bottom:20px;">
+        <thead>
+          <tr><th style="width:32px">조</th><th>훈련자(조장)</th><th>전화번호</th><th>훈련자</th><th>전화번호</th><th>훈련생</th><th>전화번호</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>4</td><td>신명순(5)</td><td>010-3753-9307</td><td>정현주(2)</td><td>010-5702-7077</td><td>최창숙(1)</td><td>010-4876-9985</td></tr>
+          <tr><td>5</td><td>임원기(4)</td><td>010-8429-1777</td><td>박길순(3)</td><td>010-2668-6813</td><td>김재진(1)</td><td>010-8664-1498</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div style="font-weight:700;color:var(--navy);font-size:13px;margin-bottom:6px;">C 그룹장: 최현미(010-2508-1775), 차복심</div>
+      <div style="overflow-x:auto;">
+      <table class="duty-table team-table" style="margin-bottom:20px;">
+        <thead>
+          <tr><th style="width:32px">조</th><th>훈련자(조장)</th><th>전화번호</th><th>훈련자</th><th>전화번호</th><th>훈련생</th><th>전화번호</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>6</td><td>김성현(4)</td><td>010-8969-1371</td><td>이나경(3)</td><td>010-9948-8665</td><td>조은진(2)</td><td>010-4204-8040</td></tr>
+          <tr><td>7</td><td>배현주(3)</td><td>010-3342-5808</td><td>김정옥(2)</td><td>010-3754-6243</td><td>박정인(1)</td><td>010-9103-7964</td></tr>
+          <tr><td>8</td><td>박희철(3)</td><td>010-3309-7997</td><td>송유미(2)</td><td>010-9407-3028</td><td>구도영(1)</td><td>010-7202-9220</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div style="font-weight:700;color:var(--navy);font-size:13px;margin-bottom:6px;">D 그룹장: 정은진(010-4745-6596), 장유미</div>
+      <div style="overflow-x:auto;">
+      <table class="duty-table team-table" style="margin-bottom:20px;">
+        <thead>
+          <tr><th style="width:32px">조</th><th>훈련자(조장)</th><th>전화번호</th><th>훈련자</th><th>전화번호</th><th>훈련생</th><th>전화번호</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>9</td><td>임주현(4)</td><td>010-8909-0338</td><td>김용대(3)</td><td>010-6238-6323</td><td>이숙희(1)</td><td>010-5294-9335</td></tr>
+          <tr><td>10</td><td>이미경(5)</td><td>010-3490-0493</td><td>김희정(3)</td><td>010-2309-2730</td><td>원준환(1)</td><td>010-2081-1407</td></tr>
+          <tr><td>11</td><td>이선영(3)</td><td>010-5717-8737</td><td>강동우(2)</td><td>010-8339-0162</td><td>방봉미(1)</td><td>010-4254-7378</td></tr>
+        </tbody>
+      </table>
+      </div>
+
+      <div style="font-weight:700;color:var(--navy);font-size:13px;margin-bottom:6px;">&lt;교사 및 헬퍼&gt;</div>
+      <div style="overflow-x:auto;">
+      <table class="duty-table team-table">
+        <tbody>
+          <tr><td>이지혜 반장</td><td>010-3117-7834</td><td>유세미 교사</td><td>010-2326-8805</td><td>박찬희 서기</td><td>010-9217-5413</td></tr>
+          <tr><td>전태룡 총무</td><td>010-2753-7463</td><td></td><td></td><td></td><td></td></tr>
+          <tr><td>유정훈 교사</td><td>010-9967-7963</td><td>계인선 헬퍼(A그룹장)</td><td>010-9008-7122</td><td>박선영 헬퍼(A부그룹장)</td><td>010-6407-7262</td></tr>
+          <tr><td>정직희 교사</td><td>010-4935-1163</td><td>장윤수 헬퍼(B그룹장)</td><td>010-2030-9807</td><td>안현주 헬퍼(B부그룹장)</td><td>010-5337-3699</td></tr>
+          <tr><td>이은희 교사</td><td>010-4425-2369</td><td>최현미 교사(C그룹장)</td><td>010-2508-1775</td><td>차복심 헬퍼(C부그룹장)</td><td>010-2428-2097</td></tr>
+          <tr><td>백남 교사</td><td>010-7616-5040</td><td>정은진 헬퍼(D그룹장)</td><td>010-4745-6596</td><td>장유미 회계(D부그룹장)</td><td>010-3232-7704</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="tab-footer">
+      <span>2026년 8월 8일</span>
+    </div>
+  </div>
+
+  <!-- ══ TAB 3: 훈련자메뉴얼 ══ -->
+  <div class="tab-panel" id="tab-newbie">
+    <div class="section" style="margin-bottom:32px">
+      <div class="section-title">
+        <h2>훈련자메뉴얼</h2>
+      </div>
+      <div class="period-box" style="margin-bottom:14px;">
+        전도폭발훈련 62기 훈련자(2) 매뉴얼 — 아래 화면에서 그대로 확인·체크할 수 있습니다.
+      </div>
+      <iframe src="JEE_62_check.html" title="JEE 훈련자 매뉴얼" style="width:100%;height:820px;border:1px solid #dee6ef;border-radius:12px;background:#fff;" loading="lazy"></iframe>
+    </div>
+  </div>
+
+  <!-- ══ TAB: 주차별 과제 ══ -->
+  <div class="tab-panel" id="tab-homework">
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">1</div>
+        <h2>주차별 과제 첨부파일</h2>
+      </div>
+      <div class="period-box" style="margin-bottom:14px;">
+        각 주차 카드에서 파일을 선택하고 <strong>업로드</strong>를 누르면 구글 드라이브에 저장되고 구글시트에 자동으로 기록됩니다.
+      </div>
+      <div id="hwWeeksWrap"></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="tab-schedule">
+
+    <!-- 주요 일정 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">1</div>
+        <h2>주요 일정</h2>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <div class="info-card" style="border-left-color:#b8860b">
+          <div class="info-label">🙏 훈련자 기도회</div>
+          <div class="info-value">2026년 8월 09일(일) 오후 3시 30분</div>
+          <div class="info-sub">개강 3주 전</div>
+        </div>
+        <div class="info-card" style="border-left-color:#1a2f4e">
+          <div class="info-label">🎓 개강일</div>
+          <div class="info-value">2026년 8월 30일(일) 오후 3시 30분</div>
+          <div class="info-sub">1주차 시작</div>
+        </div>
+        <div class="info-card" style="border-left-color:#2c5282">
+          <div class="info-label">📆 훈련 기간</div>
+          <div class="info-value">2026년 8월 30일(일) ~ 11월 29일(일)</div>
+          <div class="info-sub">총 14주(휴강 2회 포함)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 월별 달력 -->
+    <div class="section">
+      <div class="section-title">
+        <div class="section-num">2</div>
+        <h2>62기 수지주일반 주차별 일정</h2>
+      </div>
+
+      <!-- 8월 -->
+      <div class="cal-month">
+        <div class="cal-month-title">2026년 8월</div>
+        <table class="cal-table">
+          <thead><tr><th>주차</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th><th class="sun">일</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr class="pre-week">
+              <td class="week-num">사전</td>
+              <td colspan="4" class="cal-empty"></td>
+              <td></td><td></td>
+              <td class="sun special-day">9일</td>
+              <td class="note-cell">🙏 훈련자 기도회<br><span class="note-time">오후 3:30</span></td>
+            </tr>
+            <tr class="week-row w1">
+              <td class="week-num">1주</td>
+              <td>24</td><td>25</td><td>26</td><td>27</td><td>28</td><td>29</td>
+              <td class="sun opening-day">30</td>
+              <td class="note-cell">🎓 개강 <span class="note-time">오후 3:30</span><br>📖 1단계 OT 반장진행</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 9월 -->
+      <div class="cal-month">
+        <div class="cal-month-title">2026년 9월</div>
+        <table class="cal-table">
+          <thead><tr><th>주차</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th><th class="sun">일</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr class="week-row w2">
+              <td class="week-num">2주</td>
+              <td>31</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td>
+              <td class="sun">6</td><td class="note-cell">👥 그룹모임 / 🤝 코이노니아 언약<br>🍽️ 개강만찬</td>
+            </tr>
+            <tr class="week-row w3">
+              <td class="week-num">3주</td>
+              <td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td>
+              <td class="sun">13</td><td class="note-cell">🏛️ 전체보고<br>📖 3과 반장진행</td>
+            </tr>
+            <tr class="week-row w4">
+              <td class="week-num">4주</td>
+              <td>14</td><td>15</td><td>16</td><td>17</td><td>18</td><td>19</td>
+              <td class="sun">20</td><td class="note-cell">👥 그룹모임<br>&nbsp;</td>
+            </tr>
+            <tr class="week-row w5 holiday-week">
+              <td class="week-num">5주</td>
+              <td>21</td><td>22</td>
+              <td class="holiday-day">23</td>
+              <td class="holiday-day">24</td>
+              <td class="holiday-day">25</td>
+              <td class="holiday-day">26</td>
+              <td class="sun holiday-sun">27</td>
+              <td class="note-cell">🎑 추석연휴 (23~26)<br><span class="badge-off">9/27 휴강</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 10월 -->
+      <div class="cal-month">
+        <div class="cal-month-title">2026년 10월</div>
+        <table class="cal-table">
+          <thead><tr><th>주차</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th><th class="sun">일</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr class="week-row w6">
+              <td class="week-num">6주</td>
+              <td>28</td><td>29</td><td>30</td><td>1</td><td>2</td><td>3</td>
+              <td class="sun">4</td><td class="note-cell">🏛️ 전체보고<br>&nbsp;</td>
+            </tr>
+            <tr class="week-row w7">
+              <td class="week-num">7주</td>
+              <td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td>
+              <td class="sun">11</td><td class="note-cell">🙏 기도후원자 초청<br><span style="font-size:10px;color:var(--muted)">(전체보고 및 그룹모임)</span></td>
+            </tr>
+            <tr class="week-row w8">
+              <td class="week-num">8주</td>
+              <td>12</td><td>13</td><td>14</td><td>15</td><td>16</td><td>17</td>
+              <td class="sun">18</td>
+              <td class="note-cell">👥 그룹모임<br>&nbsp;</td>
+            </tr>
+            <tr class="week-row w9">
+              <td class="week-num">9주</td>
+              <td>19</td><td>20</td><td>21</td><td>22</td><td>23</td><td>24</td>
+              <td class="sun">25</td>
+              <td class="note-cell">📊 중간점검<br>📖 7과 반장진행</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 11월 -->
+      <div class="cal-month">
+        <div class="cal-month-title">2026년 11월</div>
+        <table class="cal-table">
+          <thead><tr><th>주차</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th><th class="sun">일</th><th>비고</th></tr></thead>
+          <tbody>
+            <tr class="week-row w10 holiday-week">
+              <td class="week-num">10주</td>
+              <td>26</td><td>27</td><td>28</td><td>29</td><td>30</td><td>31</td>
+              <td class="sun holiday-sun">1</td>
+              <td class="note-cell">✝️ 블레싱(수지)<br><span class="badge-off">11/1 휴강</span></td>
+            </tr>
+            <tr class="week-row w11">
+              <td class="week-num">11주</td>
+              <td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td>
+              <td class="sun">8</td><td class="note-cell">🏛️ 전체보고<br>📸 사진촬영</td>
+            </tr>
+            <tr class="week-row w12">
+              <td class="week-num">12주</td>
+              <td>9</td><td>10</td><td>11</td><td>12</td><td>13</td><td>14</td>
+              <td class="sun">15</td><td class="note-cell">👥 그룹모임<br>&nbsp;</td>
+            </tr>
+            <tr class="week-row w13">
+              <td class="week-num">13주</td>
+              <td>16</td><td>17</td><td>18</td><td>19</td><td>20</td><td>21</td>
+              <td class="sun end-13">22</td><td class="note-cell">🏁 최종평가<br>📖 11~12과 반장진행</td>
+            </tr>
+            <tr class="week-row w14">
+              <td class="week-num">14주</td>
+              <td>23</td><td>24</td><td>25</td><td>26</td><td>27</td><td>28</td>
+              <td class="sun end-14">29</td><td class="note-cell">🎓 수료식<br><span style="font-size:10px;color:var(--muted)">(수료만찬)</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- tab-schedule -->
+
+  <!-- ══ TAB 4: 회계 ══ -->
+  <!-- ══ TAB 4: 회계 ══ -->
+  <div class="tab-panel" id="tab-account">
+    <div class="acc-private">
+      <div class="acc-private-icon">🔒</div>
+      <div class="acc-private-title">비용 미공개</div>
+      <div class="acc-private-desc">회계 내역은 현재 공개되지 않습니다.</div>
+    </div>
+  </div><!-- tab-account -->
+
+  <!-- ══ TAB 6: 단계별 수업 진행 ══ -->
+  <div class="tab-panel" id="tab-lesson">
+    <nav class="subtab-nav">
+      <button class="subtab-btn active" onclick="switchSubTab('stage1', this)">1단계</button>
+      <button class="subtab-btn" onclick="switchSubTab('stage2', this)">2단계</button>
+      <button class="subtab-btn" onclick="switchSubTab('stage3', this)">3단계</button>
+      <button class="subtab-btn" onclick="switchSubTab('stage4', this)">4단계</button>
+      <button class="subtab-btn" onclick="switchSubTab('stage5', this)">5단계</button>
+    </nav>
+
+    <div class="subtab-panel active" id="subtab-stage1">
+      <div class="stage-intro">
+        <span class="stage-intro-line"><strong>과제물 점검</strong> · 훈련자가 먼저 점검, 1단계 수업 시 교사(담당 헬퍼)가 수업 전 한 차례 더 점검</span>
+        <span class="stage-intro-line"><strong>암기 진도</strong> · 현재 진도에만 집중하지 말고 다음 부분까지 미리 암기하도록 권장</span>
+        <span class="stage-intro-line"><strong>공유</strong> · 본 계획표는 2단계 이상 훈련자에게도 함께 배포되며, 동일 기준으로 암기 여부를 점검</span>
+      </div>
+      <div class="week-card">
+  <div class="week-head"><span class="week-badge">2주</span><span class="week-date">9/6</span></div>
+  <div class="week-title">1과 [유대연]</div><div class="week-field"><span class="week-label">암기내용</span>은혜</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">3주</span><span class="week-date">9/13</span></div>
+  <div class="week-title">3과 [반장]</div><div class="week-field"><span class="week-label">암기내용</span>인간 (은혜 ~ 인간)</div><div class="week-field"><span class="week-label">비고</span>간증교육</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">4주</span><span class="week-date">9/20</span></div>
+  <div class="week-title">2과 [유대연]</div><div class="week-field"><span class="week-label">암기내용</span>하나님 (은혜 ~ 하나님)</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">5주</span><span class="week-date">9/27</span></div>
+  <div class="week-title">휴강 · 추석연휴</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">6주</span><span class="week-date">10/4</span></div>
+  <div class="week-title">4과 [박기선]</div><div class="week-field"><span class="week-label">암기내용</span>그리스도 (은혜 ~ 그리스도)</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">7주</span><span class="week-date">10/11</span></div>
+  <div class="week-title">5과 [유대연]</div><div class="week-field"><span class="week-label">암기내용</span>믿음 (은혜 ~ 믿음)</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">8주</span><span class="week-date">10/18</span></div>
+  <div class="week-title">6과 [박기선]</div><div class="week-field"><span class="week-label">암기내용</span>서론 (그들의 일반생활 ~ 믿음)</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">9주</span><span class="week-date">10/25</span></div>
+  <div class="week-title">7과 [반장]</div><div class="week-field"><span class="week-label">암기내용</span>중간점검 : 서론(간증포함) ~ 믿음</div><div class="week-field"><span class="week-label">비고</span>중간점검</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">10주</span><span class="week-date">11/1</span></div>
+  <div class="week-title">휴강 · 블레싱 수지</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">11주</span><span class="week-date">11/8</span></div>
+  <div class="week-title">8과 [박기선]</div><div class="week-field"><span class="week-label">암기내용</span>결신 (그들의 일반생활 ~ 구원의 확신)</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">12주</span><span class="week-date">11/15</span></div>
+  <div class="week-title">9,10과 [유대연]</div><div class="week-field"><span class="week-label">암기내용</span>즉석양육 (그들의 일반생활 ~ 마침기도)</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">13주</span><span class="week-date">11/22</span></div>
+  <div class="week-title">11,12과 [반장]</div><div class="week-field"><span class="week-label">암기내용</span>최종평가 : 서론(간증포함) ~ 즉석양육</div><div class="week-field"><span class="week-label">비고</span>수료시험</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">14주</span></div>
+  <div class="week-title">수료식</div>
+</div>
+      <div class="section" style="margin-top:28px;">
+        <div class="section-title">
+          <h2 style="font-size:14px;">1단계 훈련생 수료 기준 (국제 전도폭발 한국 본부)</h2>
+        </div>
+        <ul style="padding-left:18px; font-size:12px; color:var(--text); line-height:1.9;">
+          <li>현장 총 10회 (관계전도 6회 이상, 질문지전도 2회 이상, 7일후재방문 1회)</li>
+          <li>현장에서 전체 풀 복음 1회 이상 (서론(간증포함) ~ 결신)</li>
+          <li>전문 암기 70점 이상</li>
+        </ul>
+      </div>
+    </div>
+    <div class="subtab-panel" id="subtab-stage2">
+      <div class="stage-intro">
+        <span class="stage-intro-line"><strong>진행 순서</strong> · 5:00~05 암기 · 5:05~20 전체설명 · 5:20~50 그룹나눔(숙제) · 5:50 마침기도</span>
+        <span class="stage-intro-line"><strong>조 편성</strong> · A조: 강동우·송유미·조은진 · B조: 김정옥·이지연 · C조: 김진우·정현주·최정화</span>
+      </div>
+      <div class="week-card">
+  <div class="week-head"><span class="week-badge">1주</span><span class="week-date">8/30</span></div>
+  <div class="week-title">-01과 훈련자로 세우기</div><div class="week-field"><span class="week-label">예습</span>교과서 p1-26, 함께기도해요 / 로마서 3:23</div><div class="week-field"><span class="week-label">발표자</span>-</div><div class="week-field"><span class="week-label">암기점검</span>전문개요 (조할당 범위)</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">2주</span><span class="week-date">9/6</span></div>
+  <div class="week-title">-02과 친구만들기와 질문지 전도</div><div class="week-field"><span class="week-label">예습</span>교과서 p80-92 / [은혜] 친구선물예화</div><div class="week-field"><span class="week-label">발표자</span>전태룡</div><div class="week-field"><span class="week-label">암기점검</span>은혜</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">3주</span><span class="week-date">9/13</span></div>
+  <div class="week-title">-04과 진단질문의 사용과 분석과 처방</div><div class="week-field"><span class="week-label">예습</span>교과서 p108-121 / [인간] 썩은 계란 요리 예화</div><div class="week-field"><span class="week-label">발표자</span>04과 : 강동우/송유미/조은진</div><div class="week-field"><span class="week-label">암기점검</span>인간</div><div class="week-field"><span class="week-label">비고</span>[질문지전도 주간]</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">4주</span><span class="week-date">9/20</span></div>
+  <div class="week-title">-03과 간증나누기</div><div class="week-field"><span class="week-label">예습</span>교과서 p93-105</div><div class="week-field"><span class="week-label">발표자</span>03과 : 김정옥/조은진</div><div class="week-field"><span class="week-label">암기점검</span>하나님</div><div class="week-field"><span class="week-label">비고</span>줌(화상)이용 방법 소개</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">5주</span><span class="week-date">9/27</span></div>
+  <div class="week-title">휴강 · 추석연휴</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">6주</span><span class="week-date">10/4</span></div>
+  <div class="week-title">-05과 은혜, 인간, 하나님 [최현미]</div><div class="week-field"><span class="week-label">예습</span>교과서 p58-62, p124-130 / [예수그리스도] 테텔레스타이 예화</div><div class="week-field"><span class="week-label">발표자</span>05과 : 김진우/정현주/최정화</div><div class="week-field"><span class="week-label">암기점검</span>그리스도</div><div class="week-field"><span class="week-label">비고</span>기도후원자 모임</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">7주</span><span class="week-date">10/11</span></div>
+  <div class="week-title">-06과 예수그리스도, 믿음 [차복심]</div><div class="week-field"><span class="week-label">예습</span>교과서 p62-68, p130-135 / [믿음] 거지의 손 예화</div><div class="week-field"><span class="week-label">발표자</span>06과 : 강동우/송유미/조은진</div><div class="week-field"><span class="week-label">암기점검</span>믿음</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">8주</span><span class="week-date">10/18</span></div>
+  <div class="week-title">-07과 결신초청하기와 결신 분석 [최현미]</div><div class="week-field"><span class="week-label">예습</span>교과서 p68-72, p138-143 / [믿음] 경건생활의 동기 예화</div><div class="week-field"><span class="week-label">발표자</span>07과 : 김정옥/이지연</div><div class="week-field"><span class="week-label">비고</span>중간점검</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">9주</span><span class="week-date">10/25</span></div>
+  <div class="week-title">-08과 새신자 제자 삼기와 양육</div><div class="week-field"><span class="week-label">예습</span>교과서 p72-78, p146-184</div><div class="week-field"><span class="week-label">발표자</span>08과 : 김진우/정현주/최정화</div><div class="week-field"><span class="week-label">암기점검</span>결신</div><div class="week-field"><span class="week-label">비고</span>사진촬영</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">10주</span><span class="week-date">11/1</span></div>
+  <div class="week-title">블레싱</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">11주</span><span class="week-date">11/8</span></div>
+  <div class="week-title">-09과 모집하기와 확대하기</div><div class="week-field"><span class="week-label">예습</span>교과서 p186-200</div><div class="week-field"><span class="week-label">발표자</span>09과 : 김정옥/이지연</div><div class="week-field"><span class="week-label">암기점검</span>서론</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">12주</span><span class="week-date">11/15</span></div>
+  <div class="week-title">-10과 전도의 생활화와 상황에 맞는 복음 제시 / -11과 반대의견 다루기</div><div class="week-field"><span class="week-label">예습</span>교과서 p28-40 / 교과서 p202-252</div><div class="week-field"><span class="week-label">발표자</span>10과 : 김진우/정현주/최정화  ·  11과 : 강동우/송유미/조은진</div><div class="week-field"><span class="week-label">암기점검</span>즉석양육</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">13주</span><span class="week-date">11/22</span></div>
+  <div class="week-title">-12과 총정리와 다음단계 및 최종점검</div><div class="week-field"><span class="week-label">비고</span>수료시험</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">14주</span><span class="week-date">11/29</span></div>
+  <div class="week-title">수료식</div>
+</div>
+      <div class="section" style="margin-top:28px;">
+        <div class="section-title">
+          <h2 style="font-size:14px;">2단계 훈련자 리스트</h2>
+        </div>
+        <table class="duty-table">
+          <thead>
+            <tr>
+              <th style="width:60px">조</th>
+              <th>이름</th>
+              <th>휴대폰</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>A</td><td>강동우</td><td>010-8339-0162</td></tr>
+            <tr><td>A</td><td>송유미</td><td>010-9407-3028</td></tr>
+            <tr><td>A</td><td>조은진</td><td>010-4204-8040</td></tr>
+            <tr><td>B</td><td>김정옥</td><td>010-3754-6243</td></tr>
+            <tr><td>B</td><td>이지연</td><td>010-9429-5992</td></tr>
+            <tr><td>C</td><td>김진우</td><td>010-7360-5088</td></tr>
+            <tr><td>C</td><td>정현주</td><td>010-5702-7077</td></tr>
+            <tr><td>C</td><td>최정화</td><td>010-3430-4160</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="subtab-panel" id="subtab-stage3">
+      <div class="stage-intro">
+        <span class="stage-intro-line"><strong>훈련 목적</strong> · 온전한 훈련자로 세워짐(훈련자를 만드는 훈련자) — 복음 암기, 반대의견 대응, 조원을 리드하는 능력 함양</span>
+        <span class="stage-intro-line"><strong>수업 진행 순서</strong> · 1:30~2:00 시범자 리허설(702호) · 5:00~05 시작기도 · 5:05~10 복음암송/나눔 · 5:10~15 특이사항 문의 · 5:15~50 교재 진행 · 5:50~55 마무리 · 5:56~6:00 중보기도·마침기도</span>
+      </div>
+      <div class="week-card">
+  <div class="week-head"><span class="week-badge">1주</span><span class="week-date">8/30</span></div>
+  <div class="week-title">개강모임/OT</div><div class="week-field"><span class="week-label">복음암송연습</span>훈련자 역할 숙지, 전체/과제 시범자 선정, 기도제목, 교재와 부교재 소개</div><div class="week-field"><span class="week-label">비고</span>2단계 훈련의 회상, 마음가짐</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">2주</span><span class="week-date">9/6</span></div>
+  <div class="week-title">1. 변증론</div><div class="week-field"><span class="week-label">담당교사</span>백남</div><div class="week-field"><span class="week-label">복음암송연습</span>서론</div><div class="week-field"><span class="week-label">전체 복음 암기 시범</span>전체복음(이선영)</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">3주</span><span class="week-date">9/13</span></div>
+  <div class="week-title">2. 과연 성경은 하나님의 말씀인가요?( I )</div><div class="week-field"><span class="week-label">담당교사</span>백남</div><div class="week-field"><span class="week-label">복음암송연습</span>은혜</div><div class="week-field"><span class="week-label">전체 복음 암기 시범</span>서론/은혜(김용대)</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">4주</span><span class="week-date">9/20</span></div>
+  <div class="week-title">3. 과연 성경은 하나님의 말씀 인가요?(Ⅱ)</div><div class="week-field"><span class="week-label">담당교사</span>백남</div><div class="week-field"><span class="week-label">복음암송연습</span>인간</div><div class="week-field"><span class="week-label">전체 복음 암기 시범</span>인간(안희정)</div><div class="week-field"><span class="week-label">비고</span>질문지전도 준비기도 / 훈련자 나눔</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">5주</span><span class="week-date">9/27</span></div>
+  <div class="week-title">추석</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">6주</span><span class="week-date">10/4</span></div>
+  <div class="week-title">4. 과연 하나님은 존재하시는 분인가요?</div><div class="week-field"><span class="week-label">담당교사</span>장유미</div><div class="week-field"><span class="week-label">복음암송연습</span>하나님</div><div class="week-field"><span class="week-label">전체 복음 암기 시범</span>하나님/그리스도(신대용)</div><div class="week-field"><span class="week-label">비고</span>질문지전도 준비기도</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">7주</span><span class="week-date">10/11</span></div>
+  <div class="week-title">5. 과연 선하신 하나님께서 고난을 허락하시나요?</div><div class="week-field"><span class="week-label">담당교사</span>박찬희</div><div class="week-field"><span class="week-label">복음암송연습</span>그리스도</div><div class="week-field"><span class="week-label">교재내 시범</span>시범(고난)</div><div class="week-field"><span class="week-label">전체 복음 암기 시범</span>믿음(박희철)</div><div class="week-field"><span class="week-label">비고</span>기도후원자 모임</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">8주</span><span class="week-date">10/18</span></div>
+  <div class="week-title">6. 과연 예수 그리스도는 실제로 부활 하셨나요?</div><div class="week-field"><span class="week-label">담당교사</span>박찬희</div><div class="week-field"><span class="week-label">복음암송연습</span>믿음</div><div class="week-field"><span class="week-label">교재내 시범</span>시범(부활)</div><div class="week-field"><span class="week-label">전체 복음 암기 시범</span>결신(이나경)</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">9주</span><span class="week-date">10/25</span></div>
+  <div class="week-title">7. 과연 예수 그리스도는 실제로 재림 하시나요? / 8. 과연 사후에 영원한 천국과 지옥이 있나요?</div><div class="week-field"><span class="week-label">담당교사</span>장유미</div><div class="week-field"><span class="week-label">복음암송연습</span>결신</div><div class="week-field"><span class="week-label">교재내 시범</span>시범(지옥)</div><div class="week-field"><span class="week-label">전체 복음 암기 시범</span>동작시범(교사)</div><div class="week-field"><span class="week-label">비고</span>중간점검</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">10주</span><span class="week-date">11/1</span></div>
+  <div class="week-title">블레싱</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">11주</span><span class="week-date">11/8</span></div>
+  <div class="week-title">9. 과연 다른 구원의 길은 없나요?</div><div class="week-field"><span class="week-label">담당교사</span>장유미</div><div class="week-field"><span class="week-label">복음암송연습</span>질문지전도</div><div class="week-field"><span class="week-label">전체 복음 암기 시범</span>질문지 전도(훈련자전체)</div><div class="week-field"><span class="week-label">비고</span>수료사진 촬영</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">12주</span><span class="week-date">11/15</span></div>
+  <div class="week-title">10. 과연 신앙생활에서 중생이 중요한 이유는 어디에 있나요? / 11. 과연 신앙생활에서 위선을 어떻게 이해해야 하나요?</div><div class="week-field"><span class="week-label">담당교사</span>백남</div><div class="week-field"><span class="week-label">복음암송연습</span>은혜~믿음</div><div class="week-field"><span class="week-label">교재내 시범</span>시범(중생)</div><div class="week-field"><span class="week-label">전체 복음 암기 시범</span>7일후 재방문(영상)</div><div class="week-field"><span class="week-label">비고</span>수료간증문</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">13주</span><span class="week-date">11/22</span></div>
+  <div class="week-title">12. 최종 정리와 다음 단계</div><div class="week-field"><span class="week-label">담당교사</span>백남</div><div class="week-field"><span class="week-label">복음암송연습</span>결신~즉석양육</div><div class="week-field"><span class="week-label">전체 복음 암기 시범</span>전체복음(박길순)</div><div class="week-field"><span class="week-label">비고</span>수료시험 / 사역 평가서 제출 / 4단계 훈련의 유익 설명</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">14주</span><span class="week-date">11/29</span></div>
+  <div class="week-title">수료식</div>
+</div>
+    </div>
+    <div class="subtab-panel" id="subtab-stage4">
+      <div class="stage-intro">
+        <span class="stage-intro-line"><strong>주교재</strong> · 복음과 인간의 고난 (1~12과)</span>
+        <span class="stage-intro-line"><strong>부교재</strong> · 상한감정의 치유 (1~12과)</span>
+        <span class="stage-intro-line"><strong>진행</strong> · 주교재 15~20분(교사 진행) + 부교재 40~45분(훈련자 발표·나눔) · 수료시험 없음</span>
+      </div>
+      <div class="week-card">
+  <div class="week-head"><span class="week-badge">1주</span><span class="week-date">8/30</span></div>
+  <div class="week-title">개강</div><div class="week-field"><span class="week-label">부교재</span>오리엔테이션 (강의진행방법, 교재와 부교재에 대한 내용소개, 훈련자 주별 발표순서 결정)</div><div class="week-field"><span class="week-label">발표자</span>부교재 내용요약 발표 / 나눔진행</div><div class="week-field"><span class="week-label">비고</span>발표자 외 훈련자는 부교재 해당과 예습</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">2주</span><span class="week-date">9/6</span></div>
+  <div class="week-title">1과 세상의 삶과 복음의 능력</div><div class="week-field"><span class="week-label">부교재</span>1. 상한감정</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">3주</span><span class="week-date">9/13</span></div>
+  <div class="week-title">2과 풍성한 삶과 복음의 능력</div><div class="week-field"><span class="week-label">부교재</span>2. 죄, 용서 그리고 빚의 청구</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">4주</span><span class="week-date">9/20</span></div>
+  <div class="week-title">3과 참 평안과 복음의 능력</div><div class="week-field"><span class="week-label">부교재</span>3. 고난 받으신 치료자</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">5주</span><span class="week-date">9/27</span></div>
+  <div class="week-title">추석</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">6주</span><span class="week-date">10/4</span></div>
+  <div class="week-title">4과 속사람과 복음의 능력</div><div class="week-field"><span class="week-label">부교재</span>4. 사단의 치명적인 무기</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">7주</span><span class="week-date">10/11</span></div>
+  <div class="week-title">5과 신분의 변화와 복음의 능력</div><div class="week-field"><span class="week-label">부교재</span>5. 자신감 결여에 대한 처방1</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">8주</span><span class="week-date">10/18</span></div>
+  <div class="week-title">6과 인간관계와 복음의 능력</div><div class="week-field"><span class="week-label">부교재</span>6. 자신감 결여에 대한 처방2</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">9주</span><span class="week-date">10/25</span></div>
+  <div class="week-title">7과 오늘의 삶과 복음의 능력</div><div class="week-field"><span class="week-label">부교재</span>7. 완벽주의 증상</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">10주</span><span class="week-date">11/1</span></div>
+  <div class="week-title">블레싱</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">11주</span><span class="week-date">11/8</span></div>
+  <div class="week-title">08과 바른목적과 복음의 능력</div><div class="week-field"><span class="week-label">부교재</span>8. 완벽주의의 치유과정</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">12주</span><span class="week-date">11/15</span></div>
+  <div class="week-title">09과 가정과 복음의 능력</div><div class="week-field"><span class="week-label">부교재</span>9. 자신에 대한 환상과 실제</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">13주</span><span class="week-date">11/22</span></div>
+  <div class="week-title">10과 육체의 어려움과 복음의 능력</div><div class="week-field"><span class="week-label">부교재</span>10. 우울증의 실상과 허상</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">14주</span><span class="week-date">11/29</span></div>
+  <div class="week-title">11과 죽음과 복음의 능력 / 총정리</div><div class="week-field"><span class="week-label">부교재</span>11. 우울증의 치유 / 12. 치유를 경험한 상담자들</div>
+</div>
+    </div>
+    <div class="subtab-panel" id="subtab-stage5">
+      <div class="stage-intro">
+        <span class="stage-intro-line"><strong>주교재</strong> · 제자삼는 사역 (제1~12과) · <strong>부교재</strong> · 제자삼는 교회</span>
+      </div>
+      <div class="week-card">
+  <div class="week-head"><span class="week-badge">1주</span><span class="week-date">8/30</span></div>
+  <div class="week-title">Orientation</div><div class="week-field"><span class="week-label">전체 일정</span>개강식</div><div class="week-field"><span class="week-label">학습 내용</span>5단계 교육인원 소개 및 간증 / 5단계 전도폭발 훈련 목표</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">2주</span><span class="week-date">9/6</span></div>
+  <div class="week-title">제1과 바르게 알아야 할 제자도</div><div class="week-field"><span class="week-label">학습 내용</span>제자도의 원리</div><div class="week-field"><span class="week-label">부교재 예습과제</span>머리말, 1장 성경의 제자도</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">3주</span><span class="week-date">9/13</span></div>
+  <div class="week-title">제2과 예수님의 사역과 제자</div><div class="week-field"><span class="week-label">학습 내용</span>제자 삼기의 모델이신 예수님</div><div class="week-field"><span class="week-label">부교재 예습과제</span>2장 제자 삼는 교회의 초점</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">4주</span><span class="week-date">9/20</span></div>
+  <div class="week-title">제3과 예수님이 세우신 제자</div><div class="week-field"><span class="week-label">학습 내용</span>평범한 12 제자를 선택하신 예수님</div><div class="week-field"><span class="week-label">부교재 예습과제</span>3장 초대교회의 설립</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">5주</span><span class="week-date">9/27</span></div>
+  <div class="week-title">추석연휴</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">6주</span><span class="week-date">10/4</span></div>
+  <div class="week-title">제4과 헌신되고 성숙한 제자</div><div class="week-field"><span class="week-label">학습 내용</span>헌신되고 성숙한 제자들을 세우신 예수님</div><div class="week-field"><span class="week-label">부교재 예습과제</span>4장 초대교회의 방식과 우선순위</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">7주</span><span class="week-date">10/11</span></div>
+  <div class="week-title">제5과 제자를 양육하는 제자</div><div class="week-field"><span class="week-label">전체 일정</span>기도후원자 모임</div><div class="week-field"><span class="week-label">학습 내용</span>예수님께서 위임하신 최고의 복된 사역</div><div class="week-field"><span class="week-label">부교재 예습과제</span>5장 교회의 성장에 따른 도전 / 6과 제자 삼기의 장벽 제거</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">8주</span><span class="week-date">10/18</span></div>
+  <div class="week-title">제6과 건강한 지도력과 제자</div><div class="week-field"><span class="week-label">학습 내용</span>최고의 지도력을 겸비하신 예수님</div><div class="week-field"><span class="week-label">부교재 예습과제</span>7장 선교교회와 예수님 / 8장 선교교회의 성숙</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">9주</span><span class="week-date">10/25</span></div>
+  <div class="week-title">제7과 사람을 낚아 내는 제자</div><div class="week-field"><span class="week-label">전체 일정</span>중간점검</div><div class="week-field"><span class="week-label">학습 내용</span>죽어가는 영혼을 낚는 예수님의 제자</div><div class="week-field"><span class="week-label">부교재 예습과제</span>9장 선교교회의 재생산</div>
+</div>
+<div class="week-card off">
+  <div class="week-head"><span class="week-badge">10주</span><span class="week-date">11/1</span></div>
+  <div class="week-title">블레싱</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">11주</span><span class="week-date">11/8</span></div>
+  <div class="week-title">제8과 십자가를 따르는 제자 / 제9과 사탄과 투쟁하는 제자</div><div class="week-field"><span class="week-label">학습 내용</span>십자가의 길을 따르기로 헌신한 제자 / 사탄과 싸워 승리하는 제자</div><div class="week-field"><span class="week-label">부교재 예습과제</span>10장 에베소 교회의 회중과 우선순위 / 11장 목회의 우선순위</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">12주</span><span class="week-date">11/15</span></div>
+  <div class="week-title">제10과 간절히 기도하는 제자</div><div class="week-field"><span class="week-label">학습 내용</span>예수님의 모범을 따라 항상 기도하는 제자</div><div class="week-field"><span class="week-label">부교재 예습과제</span>12장 리더십 공동체 구성</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">13주</span><span class="week-date">11/22</span></div>
+  <div class="week-title">제11과 교회를 세워가는 제자 / 제12과 총정리와 다음 단계</div><div class="week-field"><span class="week-label">전체 일정</span>수료시험</div><div class="week-field"><span class="week-label">학습 내용</span>주님의 몸된 교회를 사랑하는 제자 / 헬퍼로 지원하는 제자</div><div class="week-field"><span class="week-label">부교재 예습과제</span>13장 원칙에 기초한 교회</div>
+</div>
+<div class="week-card">
+  <div class="week-head"><span class="week-badge">14주</span><span class="week-date">11/29</span></div>
+  <div class="week-title">수료 공연</div><div class="week-field"><span class="week-label">전체 일정</span>수료식</div>
+</div>
+    </div>
+  </div><!-- tab-lesson -->
+
+</div><!-- .page -->
+
+<style>
+  /* ── Info Cards ── */
+  .info-card {
+    background: var(--light);
+    border-left: 4px solid var(--navy);
+    padding: 12px 14px;
+    border-radius: 0 8px 8px 0;
+    display: flex; align-items: center; gap: 10px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+  .info-label { font-size: 11px; font-weight: 700; color: var(--muted); min-width: 86px; white-space: nowrap; }
+  .info-value { font-size: 12px; font-weight: 700; color: var(--navy); white-space: nowrap; }
+  .info-sub { font-size: 10px; color: var(--muted); background: white; padding: 2px 8px; border-radius: 20px; white-space: nowrap; margin-left: auto; }
+
+  /* ── Calendar ── */
+  .cal-month { margin-bottom: 20px; }
+  .cal-month-title {
+    background: var(--navy); color: white;
+    font-size: 13px; font-weight: 700;
+    padding: 7px 14px; border-radius: 6px 6px 0 0;
+    letter-spacing: .06em;
+  }
+  .cal-table {
+    width: 100%; border-collapse: collapse; font-size: 12px;
+    table-layout: fixed;
+  }
+  .cal-table th:not(.day-th):not(:last-child),
+  .cal-table td.week-num,
+  .cal-table td:not(.note-cell):not(.week-num) {
+    width: 7.5%;
+  }
+  .cal-table th:first-child, .cal-table td.week-num {
+    width: 10%;
+  }
+  .cal-table th:last-child, .cal-table td.note-cell {
+    width: auto;
+  }
+  .cal-table th {
+    background: #2c5282; color: white;
+    padding: 6px 4px; text-align: center;
+    font-size: 11px; font-weight: 600;
+  }
+  .cal-table th.sun { color: #ffb3b3; }
+  .cal-table td {
+    padding: 7px 4px; text-align: center;
+    border: 1px solid #dee6ef;
+    font-size: 12px;
+  }
+  .cal-table .week-num {
+    background: var(--light); font-weight: 700;
+    color: var(--navy); font-size: 11px;
+    line-height: 1.4;
+  }
+  .train-week {
+    display: block; font-size: 10px; font-weight: 600;
+    color: var(--sky); margin-top: 2px;
+  }
+  .off-week { color: #e65100 !important; }
+  .cal-table .sun { color: #c0392b; font-weight: 600; }
+  .cal-table .note-cell {
+    text-align: left; font-size: 11px;
+    color: var(--navy); padding: 4px 8px;
+    line-height: 1.6;
+  }
+  .note-time { color: var(--muted); font-size: 10px; }
+  .cal-table .cal-empty { background: #f8f9fa; }
+  .cal-table .special-day {
+    background: #fff8e6; color: #b8860b !important;
+    font-weight: 700; border: 1px solid #f0d080;
+  }
+  .cal-table .opening-day {
+    background: #e8f0fb; color: #1a2f4e !important;
+    font-weight: 700; border: 1px solid #a8c4e8;
+  }
+  .cal-table .end-13 {
+    background: #e8f5e9; color: #2e7d32 !important;
+    font-weight: 700;
+  }
+  .cal-table .end-14 {
+    background: #e3f0ff; color: #1a2f4e !important;
+    font-weight: 700;
+  }
+  .pre-week td { background: #fafafa; }
+  .week-row:hover td { background: #f0f6ff; transition: background .1s; }
+  .holiday-day { background: #fff3e0 !important; color: #e65100 !important; font-weight: 600; }
+  .holiday-sun { background: #fff3e0 !important; color: #c0392b !important; font-weight: 700; }
+  .badge-off {
+    display: inline-block; background: #e65100; color: white;
+    font-size: 10px; font-weight: 700; padding: 1px 7px;
+    border-radius: 10px; margin-top: 2px;
+  }
+
+  /* ── 캘린더 모바일 ── */
+  .cal-table { font-size: 10px; }
+  .cal-table th { padding: 5px 2px; font-size: 10px; }
+  .cal-table td { padding: 5px 2px; font-size: 10px; }
+  .cal-table .note-cell { font-size: 10px; padding: 3px 5px; }
+
+  /* ── 단계별 수업 진행: 주차 카드 (모바일 최적화) ── */
+  .stage-intro {
+    background: var(--light);
+    border-left: 4px solid var(--sky);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--navy);
+    line-height: 1.7;
+  }
+  .stage-intro strong { color: var(--navy); }
+  .stage-intro .stage-intro-line { display: block; margin-top: 2px; }
+  .week-card {
+    background: var(--white);
+    border: 1px solid #dee6ef;
+    border-left: 4px solid var(--sky);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .week-card.off {
+    background: #fff8e6;
+    border-left-color: var(--gold);
+  }
+  .week-head {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 6px;
+  }
+  .week-badge {
+    background: var(--navy); color: white;
+    font-size: 11px; font-weight: 700;
+    padding: 2px 9px; border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .week-card.off .week-badge { background: var(--gold); }
+  .week-date { font-size: 11px; color: var(--muted); }
+  .week-title {
+    font-size: 13px; font-weight: 700; color: var(--navy);
+    line-height: 1.5; margin-bottom: 4px;
+  }
+  .week-card.off .week-title { margin-bottom: 0; color: #a0670a; }
+  .week-field {
+    font-size: 12px; color: var(--text); line-height: 1.6;
+    margin-top: 3px;
+  }
+  .week-label {
+    display: inline-block; color: var(--muted); font-weight: 600;
+    font-size: 11px; margin-right: 5px;
+  }
+
+  /* ── 업무분장 ── */
+  .duty-table {
+    width: 100%; border-collapse: collapse; font-size: 13px;
+  }
+  .duty-table th {
+    background: var(--navy); color: white;
+    padding: 9px 12px; font-weight: 600;
+    text-align: center; font-size: 12px; letter-spacing: .03em;
+  }
+  .duty-table td {
+    padding: 9px 12px; text-align: center;
+    border-bottom: 1px solid #dee6ef; vertical-align: middle;
+  }
+  .duty-table tr:nth-child(odd) td { background: var(--light); }
+  .duty-table tr:nth-child(even) td { background: white; }
+  .team-table { font-size: 9px; }
+  .team-table th { padding: 4px 2px; font-size: 8px; white-space: nowrap; }
+  .team-table td { padding: 4px 2px; font-size: 9px; line-height: 1.3; white-space: nowrap; }
+  .stage-head { background: var(--navy) !important; color: white !important; font-weight: 700; }
+  .dim-name { color: var(--muted); }
+
+  .duty-group-table {
+    width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 18px;
+  }
+  .duty-group-table caption {
+    text-align: left; background: var(--navy); color: white;
+    font-size: 13px; font-weight: 700; padding: 8px 12px;
+    letter-spacing: .04em; border-radius: 6px 6px 0 0;
+    caption-side: top;
+  }
+  .duty-group-table th {
+    background: #dbe6f2; color: var(--navy);
+    padding: 8px 10px; font-weight: 700; text-align: left;
+    font-size: 12px; width: 34%; border-bottom: 1px solid #cddaea;
+    vertical-align: top;
+  }
+  .duty-group-table td {
+    padding: 8px 10px; border-bottom: 1px solid #eef2f7;
+    font-size: 12px; color: var(--text);
+  }
+  .duty-group-table tr:last-child th,
+  .duty-group-table tr:last-child td { border-bottom: none; }
+  .duty-note { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
+
+  /* ── 단계별 수업 진행 서브탭 ── */
+  .subtab-nav {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--light);
+    padding-bottom: 10px;
+  }
+  .subtab-btn {
+    flex: 1;
+    background: var(--light);
+    color: var(--navy);
+    border: none;
+    padding: 10px 6px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    letter-spacing: .02em;
+    transition: background .15s, color .15s;
+  }
+  .subtab-btn:hover { background: #dbe6f2; }
+  .subtab-btn.active {
+    background: var(--navy);
+    color: white;
+  }
+  .subtab-panel { display: none; }
+  .subtab-panel.active { display: block; }
+
+  /* ── 61기 강평회 결과 ── */
+  .eval-block { margin-bottom: 20px; }
+  .eval-header {
+    background: #e8a99c;
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+    letter-spacing: .02em;
+  }
+  .eval-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+  }
+  .eval-list > li {
+    position: relative;
+    padding-left: 16px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .eval-list > li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: var(--sky);
+    font-weight: 700;
+  }
+  .eval-list > li > strong { color: var(--blue); }
+  .eval-sublist {
+    list-style: none;
+    counter-reset: eval-counter;
+    margin: 6px 0 0;
+    padding-left: 4px;
+  }
+  .eval-sublist > li {
+    counter-increment: eval-counter;
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+  }
+  .eval-sublist > li::before {
+    content: counter(eval-counter) ")";
+    position: absolute;
+    left: 0;
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .eval-note {
+    display: block;
+    margin-top: 3px;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+  }
+  .eval-summary {
+    background: #e8a99c;
+    color: var(--navy);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    margin-top: 24px;
+    letter-spacing: .02em;
+  }
+
+  /* ── Account Private Notice ── */
+  .acc-private {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center;
+    min-height: 50vh;
+    padding: 40px 20px;
+    color: var(--muted);
+  }
+  .acc-private-icon {
+    font-size: 40px;
+    margin-bottom: 14px;
+    opacity: .7;
+  }
+  .acc-private-title {
+    font-family: 'Noto Serif KR', serif;
+    font-size: 18px; font-weight: 700;
+    color: var(--navy);
+    letter-spacing: .08em;
+    margin-bottom: 8px;
+  }
+  .acc-private-desc {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ── 주차별 과제 ── */
+  .hw-week-card {
+    background: var(--white);
+    border: 1px solid #dee6ef;
+    border-left: 4px solid var(--sky);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .hw-week-card.off { border-left-color: var(--gold); }
+  .hw-week-head {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 10px;
+  }
+  .hw-week-badge {
+    background: var(--navy); color: white;
+    font-size: 11px; font-weight: 700;
+    padding: 2px 9px; border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .hw-week-card.off .hw-week-badge { background: var(--gold); }
+  .hw-week-date { font-size: 11px; color: var(--muted); }
+  .hw-week-off-tag { font-size: 10px; color: #a0670a; background:#fff2d6; padding:1px 7px; border-radius:10px; }
+  .hw-week-title {
+    font-size: 13px; font-weight: 700; color: var(--navy);
+    margin-bottom: 10px;
+  }
+  .hw-week-card.off .hw-week-title { color: #a0670a; }
+  .hw-upload-row {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .hw-file-input {
+    flex: 1; min-width: 0;
+    font-size: 12px; color: var(--text);
+  }
+  .hw-upload-btn {
+    background: var(--blue); color: white; border: none;
+    font-size: 12px; font-weight: 700;
+    padding: 7px 14px; border-radius: 8px;
+    cursor: pointer; flex-shrink: 0;
+  }
+  .hw-upload-btn:disabled { background: var(--muted); cursor: default; }
+  .hw-upload-status { font-size: 11px; color: var(--muted); }
+  .hw-file-list { display: flex; flex-direction: column; gap: 6px; }
+  .hw-file-item {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--light); border-radius: 8px;
+    padding: 7px 10px; font-size: 12px;
+  }
+  .hw-file-item a { color: var(--navy); font-weight: 600; text-decoration: none; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .hw-file-meta { font-size: 10px; color: var(--muted); flex-shrink: 0; }
+  .hw-file-empty { font-size: 11px; color: var(--muted); padding: 4px 2px; }
+</style>
+
+<script>
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function switchSubTab(id, btn) {
+    const container = btn.closest('.tab-panel');
+    container.querySelectorAll('.subtab-panel').forEach(p => p.classList.remove('active'));
+    container.querySelectorAll('.subtab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('subtab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  /* ── 주차별 과제 ── */
+  // ⚠️ Google Apps Script 웹앱 배포 후, 아래 URL을 배포된 웹앱 URL로 바꿔주세요.
+  const HW_GAS_URL = 'https://script.google.com/macros/s/AKfycbxZyQcOFPSdQvNumRGdxu6SJJz0aXgx_7oUqZr1Gntiy8zrWGep7jCHbqn8bNW6Z0QE/exec';
+
+  const HW_WEEKS = [
+    { n:1,  date:'8/30',  off:false, title:'-01과 훈련자로 세우기' },
+    { n:2,  date:'9/6',   off:false, title:'-02과 친구만들기와 질문지 전도' },
+    { n:3,  date:'9/13',  off:false, title:'-04과 진단질문의 사용과 분석과 처방' },
+    { n:4,  date:'9/20',  off:false, title:'-03과 간증나누기' },
+    { n:5,  date:'9/27',  off:true,  title:'추석연휴' },
+    { n:6,  date:'10/4',  off:false, title:'-05과 은혜, 인간, 하나님' },
+    { n:7,  date:'10/11', off:false, title:'-06과 예수그리스도, 믿음' },
+    { n:8,  date:'10/18', off:false, title:'-07과 결신초청하기와 결신 분석' },
+    { n:9,  date:'10/25', off:false, title:'-08과 새신자 제자 삼기와 양육' },
+    { n:10, date:'11/1',  off:true,  title:'블레싱(수지)' },
+    { n:11, date:'11/8',  off:false, title:'-09과 모집하기와 확대하기' },
+    { n:12, date:'11/15', off:false, title:'-10과 전도의 생활화와 상황에 맞는 복음 제시 / -11과 반대의견 다루기' },
+    { n:13, date:'11/22', off:false, title:'-12과 총정리와 다음단계 및 최종점검' },
+    { n:14, date:'11/29', off:false, title:'수료식' },
+  ];
+
+  function renderHomeworkWeeks() {
+    const wrap = document.getElementById('hwWeeksWrap');
+    if (!wrap) return;
+    wrap.innerHTML = HW_WEEKS.map(w => `
+      <div class="hw-week-card${w.off ? ' off' : ''}" id="hwCard-${w.n}">
+        <div class="hw-week-head">
+          <span class="hw-week-badge">${w.n}주</span>
+          <span class="hw-week-date">${w.date}</span>
+          ${w.off ? '<span class="hw-week-off-tag">휴강</span>' : ''}
+        </div>
+        <div class="hw-week-title">${w.title}</div>
+        <div class="hw-upload-row">
+          <input type="file" class="hw-file-input" id="hwFile-${w.n}">
+          <button class="hw-upload-btn" id="hwBtn-${w.n}" onclick="uploadHomework(${w.n})">업로드</button>
+        </div>
+        <div class="hw-upload-status" id="hwStatus-${w.n}"></div>
+        <div class="hw-file-list" id="hwFileList-${w.n}">
+          <div class="hw-file-empty">불러오는 중…</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function hwFileItemHtml(item) {
+    const dt = item.uploadedAt ? new Date(item.uploadedAt) : null;
+    const dtLabel = dt && !isNaN(dt)
+      ? `${dt.getMonth()+1}/${dt.getDate()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`
+      : '';
+    return `
+      <div class="hw-file-item">
+        <a href="${item.fileUrl}" target="_blank" rel="noopener">📎 ${item.fileName}</a>
+        <span class="hw-file-meta">${dtLabel}</span>
+      </div>
+    `;
+  }
+
+  async function loadHomeworkFiles() {
+    if (!HW_GAS_URL || HW_GAS_URL.indexOf('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') === 0) {
+      HW_WEEKS.forEach(w => {
+        const list = document.getElementById(`hwFileList-${w.n}`);
+        if (list) list.innerHTML = '<div class="hw-file-empty">아직 등록된 파일이 없습니다.</div>';
+      });
+      return;
+    }
+    try {
+      const res = await fetch(`${HW_GAS_URL}?action=listHomework`);
+      const data = await res.json();
+      const byWeek = {};
+      (data.items || data || []).forEach(item => {
+        const w = Number(item.week);
+        if (!byWeek[w]) byWeek[w] = [];
+        byWeek[w].push(item);
+      });
+      HW_WEEKS.forEach(w => {
+        const list = document.getElementById(`hwFileList-${w.n}`);
+        if (!list) return;
+        const items = byWeek[w.n] || [];
+        list.innerHTML = items.length
+          ? items.map(hwFileItemHtml).join('')
+          : '<div class="hw-file-empty">아직 등록된 파일이 없습니다.</div>';
+      });
+    } catch (err) {
+      HW_WEEKS.forEach(w => {
+        const list = document.getElementById(`hwFileList-${w.n}`);
+        if (list) list.innerHTML = '<div class="hw-file-empty">목록을 불러오지 못했습니다.</div>';
+      });
+    }
+  }
+
+  function uploadHomework(week) {
+    const input = document.getElementById(`hwFile-${week}`);
+    const btn = document.getElementById(`hwBtn-${week}`);
+    const status = document.getElementById(`hwStatus-${week}`);
+    const file = input.files[0];
+    if (!file) { status.textContent = '파일을 먼저 선택해 주세요.'; return; }
+    if (!HW_GAS_URL || HW_GAS_URL.indexOf('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') === 0) {
+      status.textContent = '⚠️ 아직 구글 시트 연동 주소가 설정되지 않았습니다.';
+      return;
+    }
+
+    btn.disabled = true;
+    status.textContent = '업로드 중…';
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const base64 = reader.result.split(',')[1];
+      try {
+        const res = await fetch(HW_GAS_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'uploadHomework',
+            week: week,
+            fileName: file.name,
+            mimeType: file.type || 'application/octet-stream',
+            base64: base64
+          })
+        });
+        const result = await res.json();
+        if (result.success) {
+          status.textContent = '✅ 업로드 완료';
+          input.value = '';
+          const list = document.getElementById(`hwFileList-${week}`);
+          const empty = list.querySelector('.hw-file-empty');
+          if (empty) empty.remove();
+          list.insertAdjacentHTML('afterbegin', hwFileItemHtml(result));
+        } else {
+          status.textContent = '❌ 업로드 실패: ' + (result.message || '알 수 없는 오류');
+        }
+      } catch (err) {
+        status.textContent = '❌ 업로드 중 오류가 발생했습니다.';
+      } finally {
+        btn.disabled = false;
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  renderHomeworkWeeks();
+  loadHomeworkFiles();
+
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
+</body>
+</html>
