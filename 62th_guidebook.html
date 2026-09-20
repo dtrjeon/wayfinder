@@ -1350,6 +1350,7 @@
     white-space: nowrap; -webkit-touch-callout: none;
   }
   .hw-file-meta { font-size: 10px; color: var(--muted); flex-shrink: 0; }
+  .hw-file-count { font-size: 10px; color: var(--sky); font-weight: 700; flex-shrink: 0; margin-left: 6px; }
   .hw-file-empty { font-size: 11px; color: var(--muted); padding: 4px 2px; }
   .hw-file-menu {
     position: fixed; z-index: 999;
@@ -1422,8 +1423,39 @@
     }
     // 파일이 여러 개면 각각 새 탭으로 모두 열어 개별 다운로드합니다.
     files.forEach(f => {
-      if (f && f.fileUrl) window.open(buildDownloadUrl(f.fileUrl, f.fileId), '_blank', 'noopener');
+      if (f && f.fileUrl) {
+        window.open(buildDownloadUrl(f.fileUrl, f.fileId), '_blank', 'noopener');
+        recordHwDownload(f.fileId, f.fileName);
+      }
     });
+  }
+
+  // 다운로드 횟수를 구글시트에 기록합니다. (실패해도 다운로드 자체는 막지 않음)
+  function recordHwDownload(fileId, fileName) {
+    if (!fileId) return;
+    if (!HW_GAS_URL || HW_GAS_URL.indexOf('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') === 0) return;
+    fetch(HW_GAS_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ action: 'recordDownload', fileId: fileId, fileName: fileName })
+    }).then(async res => {
+      try {
+        const result = await res.json();
+        if (result && result.success) {
+          // 화면에 즉시 반영 (다시 불러오지 않고 카운트만 갱신)
+          for (const w in hwFilesByWeek) {
+            const item = (hwFilesByWeek[w] || []).find(f => f.fileId === fileId);
+            if (item) {
+              item.downloadCount = result.downloadCount;
+              const meta = document.querySelector(`.hw-file-link[data-file-id="${fileId}"]`)
+                ?.closest('.hw-file-item')?.querySelector('.hw-file-count');
+              if (meta) meta.textContent = `⬇${result.downloadCount}`;
+              break;
+            }
+          }
+        }
+      } catch (e) {}
+    }).catch(() => {});
   }
 
   function renderHomeworkWeeks() {
@@ -1478,11 +1510,13 @@
       : '';
     const downloadUrl = buildDownloadUrl(item.fileUrl, item.fileId);
     const safeName = String(item.fileName).replace(/"/g, '&quot;');
+    const dlCount = item.downloadCount || 0;
     return `
       <div class="hw-file-item">
         <a href="${item.fileUrl}" target="_blank" rel="noopener" class="hw-file-link"
-           data-file-url="${item.fileUrl}" data-download-url="${downloadUrl}" data-file-name="${safeName}">📎 ${item.fileName}</a>
+           data-file-url="${item.fileUrl}" data-download-url="${downloadUrl}" data-file-name="${safeName}" data-file-id="${item.fileId || ''}">📎 ${item.fileName}</a>
         <span class="hw-file-meta">${dtLabel}</span>
+        <span class="hw-file-count">⬇${dlCount}</span>
       </div>
     `;
   }
@@ -1611,6 +1645,7 @@
     };
     menu.querySelector('[data-act="download"]').onclick = () => {
       window.open(link.dataset.downloadUrl, '_blank', 'noopener');
+      recordHwDownload(link.dataset.fileId, link.dataset.fileName);
       closeHwFileMenu();
     };
     hwMenuEl = menu;
