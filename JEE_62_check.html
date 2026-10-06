@@ -401,6 +401,38 @@
   .cb-font-label{ font-size:11px; font-weight:400; color:var(--ink-soft); }
   .card-body-inner.focus{ position:fixed; inset:0; z-index:90; background:var(--paper,#fff); overflow-y:auto;
     padding:14px 18px 60px !important; max-width:none; -webkit-overflow-scrolling:touch; }
+  .glory-btn{ border:1px solid var(--paper-line); background:var(--box-bg); border-radius:50%; width:30px; height:30px; font-size:15px; cursor:pointer; vertical-align:middle; padding:0; line-height:1; }
+  .glory-btn.on{ background:var(--navy,#1f2a44); }
+  .glory-note{ background:var(--box-bg); border:1px solid var(--paper-line); border-radius:12px; padding:4px 14px; margin:8px 0 14px; font-size:calc(13px * var(--font-scale)); line-height:1.75; color:var(--ink); }
+  .glory-note p{ margin:10px 0; } .glory-note ul{ margin:6px 0; padding-left:20px; } .glory-note li{ margin:3px 0; }
+  .faq{ border:1px solid var(--paper-line); border-radius:12px; margin:8px 0; background:var(--box-bg); }
+  .faq summary{ list-style:none; cursor:pointer; padding:12px 14px; font-size:calc(14px * var(--font-scale)); font-weight:700; line-height:1.5; display:flex; gap:10px; }
+  .faq summary::-webkit-details-marker{ display:none; }
+  .faq-q,.faq-aa{ flex:none; font-family:'Noto Sans KR',sans-serif; font-weight:700; color:var(--clay); }
+  .faq-a{ padding:0 14px 14px; font-size:calc(13.5px * var(--font-scale)); line-height:1.75; display:flex; gap:10px; border-top:1px dashed var(--paper-line); padding-top:10px; }
+  .faq[open] summary{ color:var(--clay); }
+  .qna-warn{ background:#FFF4E0; border:1px solid #E8C98A; color:#6b4a10; border-radius:10px; padding:9px 12px; margin:8px 0; font-size:calc(12px * var(--font-scale)); line-height:1.6; }
+  .qna-notice{ font-size:calc(12px * var(--font-scale)); color:#B3402A; margin:8px 0 0; line-height:1.6; }
+  .qna-card{ background:var(--box-bg); border:1px solid var(--paper-line); border-radius:12px; padding:12px; margin:10px 0; }
+  .qna-title{ font-weight:700; margin-bottom:8px; font-size:calc(14px * var(--font-scale)); }
+  .qna-form input,.qna-form textarea{ width:100%; box-sizing:border-box; border:1px solid var(--paper-line); border-radius:8px; padding:9px 10px; margin-bottom:8px; font:inherit; font-size:16px; background:var(--paper,#fff); color:var(--ink); }
+  .qna-filerow{ display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+  .qna-pick{ border:1px dashed var(--ink-soft); border-radius:8px; padding:8px 12px; font-size:13px; cursor:pointer; }
+  .qna-picked{ font-size:12px; color:var(--ink-soft); word-break:break-all; }
+  .qna-clear{ border:none; background:none; font-size:14px; cursor:pointer; color:var(--ink-soft); }
+  .qna-preview{ width:100%; max-height:240px; object-fit:contain; border-radius:8px; border:1px solid var(--paper-line); margin-bottom:8px; background:#fff; }
+  .qna-submit,.qna-toggle{ width:100%; padding:11px; border:none; border-radius:10px; background:var(--navy,#1f2a44); color:#fff; font-size:14px; font-weight:700; cursor:pointer; }
+  .qna-submit:disabled{ opacity:.5; }
+  .qna-toggle{ background:transparent; color:var(--ink); border:1px solid var(--paper-line); margin-top:10px; }
+  .qna-meta{ font-size:calc(11.5px * var(--font-scale)); color:var(--ink-soft); margin-bottom:6px; display:flex; gap:4px; align-items:center; flex-wrap:wrap; }
+  .qna-meta b{ color:var(--ink); }
+  .qna-badge{ margin-left:auto; padding:2px 8px; border-radius:20px; background:#eee; font-size:11px; } .qna-badge.ok{ background:#DDF1E3; color:#1d6b3a; }
+  .qna-body{ display:flex; gap:10px; font-size:calc(14px * var(--font-scale)); line-height:1.7; word-break:break-word; }
+  .qna-q,.qna-a{ flex:none; font-weight:700; color:var(--clay); font-family:'Noto Sans KR',sans-serif; }
+  .qna-ans{ margin-top:10px; padding:10px; border-radius:10px; background:var(--paper,#fff); border:1px solid var(--paper-line); }
+  .qna-att{ margin-top:8px; } .qna-img{ width:100%; max-height:420px; object-fit:contain; border-radius:8px; border:1px solid var(--paper-line); background:#fff; cursor:zoom-in; display:block; }
+  .qna-dl,.qna-file{ display:inline-block; margin-top:6px; font-size:12.5px; color:var(--clay); text-decoration:underline; }
+  .qna-file span{ margin-left:4px; font-size:11px; }
   .dl-btn{ display:block; width:100%; margin-top:8px; padding:11px; border:none; border-radius:10px;
     background:var(--navy,#1f2a44); color:#fff; font-family:'Noto Sans KR',sans-serif; font-size:calc(13px * var(--font-scale)); cursor:pointer; }
   .dl-btn.dl-all{ background:transparent; color:var(--ink,#333); border:1px solid var(--paper-line); margin-top:14px; }
@@ -573,7 +605,7 @@ const SECTIONS = [
 {
   id:4, page:'9p', title:'공개 보고 순서 및 요령', type:'report',
   formatLine:'복음제시 ( )회 · 대상자 ( )명 · 결신 ( )명 · 보류/거절 ( )명 · 이미신자 ( )명 · 확신 ( )명',
-  order:['“제 (  )기 (  )반 (  )조 방문보고 드리겠습니다.”','… 보고 내용 …','마지막으로 “이 모든 영광을 하나님께 돌립니다.” (인사)'],
+  order:['“제 (  )기 (  )반 (  )조 방문보고 드리겠습니다.”','… 보고 내용 …','마지막으로 “모든 영광을 하나님께 돌립니다.” (인사)'],
   rules:[
     '접촉: 서론의 진단질문 1, 2를 제시한 것부터 접촉으로 포함한다. 인사를 나눈 것도 접촉에 포함한다. (59기 추가)',
     '복음제시: 서론 대화와 복음 설명을 하고 확인질문(“이해가 되십니까?”)까지 제시한 경우.',
@@ -692,6 +724,10 @@ const SECTIONS = [
     '역사적 배경 — 침묵과 성찰: 퀘이커교(종교친우회)는 17세기 영국에서 시작된 개신교 분파로, 형식적 예배나 성직자 중심 권위를 거부하고 모든 사람 안에 ‘신의 빛(Inner Light)’이 있다고 믿었다. 소란스러운 설교 대신 고요한 침묵 속에서 하나님의 인도를 기다리는 예배를 드렸으며, 이 침묵의 영성을 일상 대화와 공동체 모임으로 확장한 것이 ‘퀘이커 질문’이다.',
     '‘질문’의 핵심 철학 — 조언하지 않고 질문을 통해 스스로 답을 찾도록 유도하며, “예/아니오”로 답할 수 없는 열린 질문(open-ended)을 던지고, 답변을 비판·평가하지 않고 온전히 수용하는 경청을 한다.'
   ]
+},
+{
+  id:9, page:'', title:'Q&A', type:'faq',
+  faq:[["대상자가 진단질문에 모호하거나 틀리게 대답하면 어떻게 하나요?", "경솔하게 판단해 기분 상하지 않도록 유의합니다. “하나님의 자녀라서요”, “믿음으로 가요”처럼 답해도 “구원의 확신이 없으시군요” 같이 신앙을 판단하는 표현은 삼갑니다. (1. 훈련자 유의사항)"], ["복음제시를 전문대로 전하지 못했다면?", "부득이 전문대로 전하지 못했다면, 복음제시를 마친 후 훈련생에게 반드시 그 이유를 설명해 줍니다. 평소에는 복음전문 그대로 전하는 모범을 보입니다. (1. 훈련자 유의사항)"], ["훈련자의 가장 중요한 역할은 무엇인가요?", "① 훈련생 숙제 점검 ② 현장실습 리더 ③ 공개보고회 준비 ④ 훈련생 파일 점검 및 정리, 크게 네 가지입니다. 훈련자는 곧 훈련생의 영적 부모로서 본이 되어야 합니다. (2. 훈련자 역할)"], ["훈련생 파일은 무엇을 점검하나요?", "전폭사역 평가표(교재 P.107, 12~13주차), 기도후원자 카드 2매(2~3주차), 전도대상자 카드(2~3주차), 개인간증문·모집간증문을 점검한 뒤 그룹장과 공유합니다. (2. 훈련자 역할)"], ["대상자가 부재중이거나 난처해하면?", "문자(SNS)로 재방문을 약속하되 저녁 9시 이전을 권장합니다. 또는 공공장소 질문지 전도를 하거나 팀 내 복음제시 연습을 합니다. (2. 훈련자 역할)"], ["이미 확신 있는 그리스도인을 만났을 때는?", "상황에 맞게 세 가지 중 선택합니다. ① 감사 인사 후 이동 ② 교회가 믿는 바 소개 ③ 상대의 간증을 듣고 나의 간증 나누기. (2. 훈련자 역할)"], ["현관문 앞에서는 어떻게 하나요?", "여자팀원이 위협적이지 않게 잘 보이는 곳에 서고 “좋은 소식을 가지고 왔다”고 안내합니다. “곤란하다”고 하시면 이유는 묻지 말고 다음 방문 일정만 약속합니다. (3. 현장 실습 유의사항)"], ["현장실습을 마치고 돌아오면서 무엇을 하나요?", "긍정적인 면부터 평가 → 더 잘할 수 있는 점을 세워주는 마음으로 이야기 → 오늘 배운 것 확인 → 공개보고회 자료 기록 및 대상자를 위해 기도합니다. (3. 현장 실습 유의사항)"], ["공개보고에서 접촉과 복음제시는 어떻게 구분하나요?", "접촉은 서론의 진단질문 1, 2를 제시한 것부터이며 인사를 나눈 것도 포함합니다(59기 추가). 복음제시는 서론 대화와 복음 설명을 하고 확인질문(“이해가 되십니까?”)까지 제시한 경우입니다. (4. 공개 보고)"], ["공개보고는 어떻게 하나요?", "순서에 따라 2분 이내로 간략히 하고, 보고자는 항상 중앙에 위치합니다. 대상자 이름은 거명하지 않고 성씨만 사용하며(예: “김씨 성을 가진 남성분”), 중보기도가 필요한 기도제목을 꼭 확인해 보고합니다. (4. 공개 보고)"], ["결신율은 어떻게 계산하나요?", "결신율(%) = 결신 ÷ ( 복음제시 − (이미신자 + 확신부족신자) ) × 100 (4. 공개 보고)"], ["7일후 재방문은 보고서에 어떻게 작성하나요?", "1~4번까지만 표기하고 5번·7번은 미표기합니다. 6번 결과는 확신 또는 이미신자로 표기하고, 8번에는 현장실습 느낀점을 적습니다. 7일후 재방문은 결신자 대상이며 이미신자는 재방문 대상이 아닙니다. (4. 공개 보고)"], ["진단 결과(결신·확신·보류/거부·이미신자·머리신자)는 어떻게 구분하나요?", "결신: 복음제시 후 예수님을 구주로 영접. 확신: 천국 확신이 없다고 했으나 믿음을 고백(구원간증을 반드시 들어봄). 보류/거부: 복음을 듣고 영생의 선물 받기를 연기 또는 거부. 이미신자: 구원 확신 말씀/간증이 있음. 머리신자: 구원 말씀/간증이 없음. 1개만 선택합니다. (5. 공개 보고서 작성 요령)"], ["이유질문 답변이 “불확실”(행위와 믿음 중복 등)이면?", "양식에는 [불확실/행위/모름/대답안함]만 표기되어 있으므로, 수기로 “불확실” 용어를 추가 표기합니다. (5. 공개 보고서 작성 요령)"], ["7일 후 재방문 때 새신자에게 안내할 신앙생활 다섯 가지는?", "① 성경 읽기 ② 기도 ③ 예배 참석 ④ 교제 ⑤ 전도입니다. 성경은 하루 한 장씩, 기도는 다섯 손가락 기도, 예배·목장모임 참석을 구체적으로 약속하고 함께 기도합니다. (6. 칠일 후 재방문 시범)"], ["결신기도 직후 확신질문은 어떻게 하나요?", "요한복음 6:47을 대상자가 직접 읽게 하고 “너희에게는 누구?”, “믿는 자는?”, “무엇을 가졌다고?”로 스스로 답하게 합니다. 이어 “나는 천국에 갈 확신이 있습니다”를 따라 말하게 하고, 요한복음 1:12도 같은 요령으로 읽게 합니다. (7. 확신질문 방법)"], ["“하나님의 자녀가 된 것이 느껴지지 않는다”고 하면?", "대부분 못 느낀다고 답하는데 정상입니다. 육신으로 태어날 때 그 순간을 못 느꼈던 것과 같음을 짚어주고, “함께 성장해요” 책을 선물하며 즉석 양육을 마무리합니다. (7. 확신질문 방법)"], ["조별 나눔 QQ(퀘이커 질문)는 어떻게 진행하나요?", "조원 중 1명이 자신의 삶에 대해 QQ 5가지 질문을 나누면 그분을 위해 기도하고 다음 사람으로 넘어갑니다. 맞고 틀린 답이 아니라 하나님 앞에서 현재 상태를 솔직히 돌아보는 질문이며, 편하게 느낀 만큼만 나누면 됩니다. (8. 조별 나눔시 QQ)"]]
 }
 ];
 
@@ -836,6 +872,162 @@ function checkIcon(){
   return '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>';
 }
 
+/* ================= Q&A 등록 (문의자/답신자) ================= */
+// ▼ 구글 Apps Script 웹앱 URL(배포 후 입력). 비워두면 이 기기에서만 저장되는 '로컬 모드'로 동작합니다.
+const QNA_GAS_URL = '';
+const QNA_LOCAL_KEY = 'jee62-qna-local';
+const QNA_NAME_KEY = 'jee62-qna-name';
+let qnaItems = [], qnaLoaded = false, qnaLoading = false, qnaErr = '';
+let qnaDrafts = {};          // {ask:{name,text}, <qid>:{name,text}}
+let qnaFiles = {};           // {ask:{name,mime,dataUrl}, <qid>:...}
+let qnaAnswerOpen = new Set();
+let qnaBusy = false;
+
+function escHtml(t){ return String(t==null?'':t).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function nl2br(t){ return escHtml(t).replace(/\n/g,'<br>'); }
+function fmtDate(iso){ try{ const d=new Date(iso); const p=n=>String(n).padStart(2,'0'); return `${d.getFullYear()}.${p(d.getMonth()+1)}.${p(d.getDate())}`; }catch(e){ return ''; } }
+function fmtPhone(t){ const d=String(t||'').replace(/\D/g,''); if(d.length===11) return d.replace(/(\d{3})(\d{4})(\d{4})/,'$1-$2-$3'); if(d.length===10) return d.replace(/(\d{3})(\d{3})(\d{4})/,'$1-$2-$3'); return String(t||''); }
+function savedPhone(){ try{ return localStorage.getItem('jee62-qna-phone')||''; }catch(e){ return ''; } }
+const QNA_NOTICE = '※ 문의 내용에 따라 삭제될 수 있습니다.<br>※ 경우에 따라 답변이 늦을 수 있습니다.';
+function savedName(){ try{ return localStorage.getItem(QNA_NAME_KEY)||''; }catch(e){ return ''; } }
+function saveName(n){ try{ localStorage.setItem(QNA_NAME_KEY,n); }catch(e){} }
+
+function readFileAsDataUrl(file){
+  return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.onerror=rej; r.readAsDataURL(file); });
+}
+async function prepareFile(file){
+  if(!file) return null;
+  if(file.type.startsWith('image/')){
+    const url = await readFileAsDataUrl(file);
+    const img = await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+    const max = 1280, sc = Math.min(1, max/Math.max(img.width,img.height));
+    const c = document.createElement('canvas'); c.width=Math.round(img.width*sc); c.height=Math.round(img.height*sc);
+    c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+    const base = file.name.replace(/\.[^.]+$/,'')||'image';
+    return {name: base+'.jpg', mime:'image/jpeg', dataUrl:c.toDataURL('image/jpeg',0.8)};
+  }
+  if(file.size > 6*1024*1024) throw new Error('파일은 6MB 이하만 등록할 수 있습니다.');
+  return {name:file.name, mime:file.type||'application/octet-stream', dataUrl: await readFileAsDataUrl(file)};
+}
+
+/* ---- 저장소: GAS 또는 로컬 ---- */
+function loadLocal(){ try{ return JSON.parse(localStorage.getItem(QNA_LOCAL_KEY)||'[]'); }catch(e){ return []; } }
+function saveLocal(list){ try{ localStorage.setItem(QNA_LOCAL_KEY, JSON.stringify(list)); }catch(e){ throw new Error('저장 공간이 부족합니다. 이미지를 줄이거나 구글시트 연결을 사용하세요.'); } }
+async function gasPost(body){
+  const r = await fetch(QNA_GAS_URL,{method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:JSON.stringify(body)});
+  const j = await r.json(); if(!j.ok) throw new Error(j.error||'저장 실패'); return j;
+}
+async function qnaFetchAll(){
+  if(!QNA_GAS_URL) return loadLocal();
+  const r = await fetch(QNA_GAS_URL+'?action=list'); const j = await r.json();
+  if(!j.ok) throw new Error(j.error||'불러오기 실패'); return j.items;
+}
+async function qnaAdd(kind, qid, name, text, file, phone){
+  const now = new Date().toISOString();
+  if(!QNA_GAS_URL){
+    const list = loadLocal();
+    const f = file ? {name:file.name, mime:file.mime, url:file.dataUrl} : null;
+    if(kind==='ask') list.unshift({id:'q'+Date.now(), createdAt:now, name, phone, text, file:f, answers:[]});
+    else { const q = list.find(x=>x.id===qid); if(q) q.answers.push({id:'a'+Date.now(), createdAt:now, name, text, file:f}); }
+    saveLocal(list); return;
+  }
+  await gasPost({action: kind==='ask'?'addQuestion':'addAnswer', qid, name, phone, text, file: file?{name:file.name,mime:file.mime,data:file.dataUrl.split(',')[1]}:null});
+}
+
+/* ---- 화면 ---- */
+function qnaFileHtml(f){
+  if(!f) return '';
+  const view = f.url || (f.id ? `https://drive.google.com/thumbnail?id=${f.id}&sz=w1200` : '');
+  const dl = f.url || (f.id ? `https://drive.google.com/uc?export=download&id=${f.id}` : '');
+  if((f.mime||'').startsWith('image/')){
+    return `<div class="qna-att"><img class="qna-img" src="${escHtml(view)}" alt="${escHtml(f.name)}" loading="lazy"><a class="qna-dl" href="${escHtml(dl)}" download="${escHtml(f.name)}" target="_blank" rel="noopener">⬇ ${escHtml(f.name)}</a></div>`;
+  }
+  return `<div class="qna-att"><a class="qna-file" href="${escHtml(dl)}" download="${escHtml(f.name)}" target="_blank" rel="noopener">📎 ${escHtml(f.name)} <span>다운로드</span></a></div>`;
+}
+function qnaFormHtml(key, label){
+  const d = qnaDrafts[key]||{}; const nm = d.name!==undefined ? d.name : savedName();
+  const f = qnaFiles[key];
+  return `<div class="qna-form" data-key="${key}">
+    <input class="qna-name" type="text" maxlength="30" placeholder="성명" value="${escHtml(nm)}">
+    ${key==='ask'?`<input class="qna-phone" type="tel" inputmode="tel" maxlength="20" placeholder="전화번호 (예: 010-1234-5678)" value="${escHtml(d.phone!==undefined?d.phone:savedPhone())}">`:''}
+    <textarea class="qna-text" rows="3" maxlength="3000" placeholder="${label} 내용 (글, 또는 이미지·자료만 올려도 됩니다)">${escHtml(d.text||'')}</textarea>
+    <div class="qna-filerow">
+      <label class="qna-pick">📷 이미지·자료 첨부<input class="qna-file-in" type="file" accept="image/*,.pdf,.doc,.docx,.hwp,.ppt,.pptx,.xls,.xlsx,.txt" hidden></label>
+      <span class="qna-picked">${f?escHtml(f.name):''}</span>${f?'<button class="qna-clear" type="button">✕</button>':''}
+    </div>
+    ${f&&f.mime.startsWith('image/')?`<img class="qna-preview" src="${f.dataUrl}" alt="">`:''}
+    <button class="qna-submit" type="button">${label} 등록</button>
+  </div>`;
+}
+function renderQna(){
+  const box = document.getElementById('qnaBox'); if(!box) return;
+  let h = QNA_GAS_URL ? '' : `<div class="qna-warn">⚠ 구글시트가 아직 연결되지 않아 <b>이 기기에서만</b> 보이고 저장됩니다. 모두가 함께 보려면 구글시트(Apps Script) 연결이 필요합니다.</div>`;
+  if(qnaErr) h += `<div class="qna-warn">${escHtml(qnaErr)}</div>`;
+  h += `<div class="qna-card"><div class="qna-title">❓ 문의하기</div>${qnaFormHtml('ask','문의')}<p class="qna-notice">${QNA_NOTICE}</p></div>`;
+  if(qnaLoading && !qnaLoaded) h += `<p class="para">불러오는 중…</p>`;
+  h += `<div class="divider-label">등록된 문의 ${qnaItems.length}건</div><p class="qna-notice">${QNA_NOTICE}</p>`;
+  qnaItems.forEach(q=>{
+    const open = qnaAnswerOpen.has(q.id);
+    h += `<div class="qna-card" data-qid="${escHtml(q.id)}">
+      <div class="qna-meta"><b>${escHtml(q.name)}</b>${q.phone?` · 📞 ${escHtml(q.phone)}`:''} · ${fmtDate(q.createdAt)}<span class="qna-badge ${q.answers.length?'ok':''}">${q.answers.length?`답변 ${q.answers.length}`:'답변 대기'}</span></div>
+      <div class="qna-body"><span class="qna-q">Q</span><div>${nl2br(q.text)}${qnaFileHtml(q.file)}</div></div>`;
+    q.answers.forEach(a=>{
+      h += `<div class="qna-ans"><div class="qna-meta"><b>${escHtml(a.name)}</b> · ${fmtDate(a.createdAt)}</div>
+        <div class="qna-body"><span class="qna-a">A</span><div>${nl2br(a.text)}${qnaFileHtml(a.file)}</div></div></div>`;
+    });
+    h += `<button class="qna-toggle" type="button" data-toggle-ans="${escHtml(q.id)}">${open?'답변 작성 닫기':'💬 답변 달기'}</button>`;
+    if(open) h += qnaFormHtml(q.id,'답변');
+    h += `</div>`;
+  });
+  box.innerHTML = h;
+  box.querySelectorAll('.qna-img').forEach(img=> img.addEventListener('click',()=>{
+    document.getElementById('lightboxImg').src = img.src; document.getElementById('lightbox').classList.add('show');
+  }));
+  box.querySelectorAll('[data-toggle-ans]').forEach(b=> b.addEventListener('click',()=>{
+    const id=b.dataset.toggleAns; qnaAnswerOpen.has(id)?qnaAnswerOpen.delete(id):qnaAnswerOpen.add(id); renderQna();
+  }));
+  box.querySelectorAll('.qna-form').forEach(form=>{
+    const key = form.dataset.key; qnaDrafts[key] = qnaDrafts[key]||{};
+    form.querySelector('.qna-name').addEventListener('input',e=>{ qnaDrafts[key].name=e.target.value; });
+    form.querySelector('.qna-text').addEventListener('input',e=>{ qnaDrafts[key].text=e.target.value; });
+    const ph = form.querySelector('.qna-phone'); if(ph) ph.addEventListener('input',e=>{ qnaDrafts[key].phone=e.target.value; });
+    form.querySelector('.qna-file-in').addEventListener('change', async e=>{
+      const f = e.target.files[0]; if(!f) return;
+      try{ qnaFiles[key] = await prepareFile(f); qnaErr=''; }catch(err){ qnaErr = err.message; }
+      renderQna();
+    });
+    const clr = form.querySelector('.qna-clear'); if(clr) clr.addEventListener('click',()=>{ delete qnaFiles[key]; renderQna(); });
+    form.querySelector('.qna-submit').addEventListener('click', ()=> qnaSubmit(key, form));
+  });
+}
+async function qnaSubmit(key, form){
+  if(qnaBusy) return;
+  const name = form.querySelector('.qna-name').value.trim();
+  const text = form.querySelector('.qna-text').value.trim();
+  const file = qnaFiles[key]||null;
+  const phEl = form.querySelector('.qna-phone');
+  const phone = phEl ? fmtPhone(phEl.value.trim()) : '';
+  if(phEl && phone.replace(/\D/g,'').length < 9){ qnaErr='전화번호를 정확히 입력해 주세요.'; renderQna(); return; }
+  if(!name){ qnaErr='성명을 입력해 주세요.'; renderQna(); return; }
+  if(!text && !file){ qnaErr='내용을 입력하거나 이미지·자료를 첨부해 주세요.'; renderQna(); return; }
+  qnaBusy = true; const btn = form.querySelector('.qna-submit'); btn.disabled = true; btn.textContent='등록 중…';
+  try{
+    saveName(name); if(phEl){ try{ localStorage.setItem('jee62-qna-phone',phone); }catch(e){} }
+    await qnaAdd(key==='ask'?'ask':'answer', key, name, text, file, phone);
+    delete qnaDrafts[key]; delete qnaFiles[key]; qnaAnswerOpen.delete(key); qnaErr='';
+    qnaItems = await qnaFetchAll();
+  }catch(err){ qnaErr = '등록 실패: '+err.message; }
+  qnaBusy = false; renderQna();
+}
+async function initQna(){
+  renderQna();
+  if(qnaLoaded || qnaLoading) return;
+  qnaLoading = true;
+  try{ qnaItems = await qnaFetchAll(); qnaErr=''; }catch(err){ qnaErr = '불러오기 실패: '+err.message; }
+  qnaLoading = false; qnaLoaded = true; renderQna();
+}
+
+let openFaq = new Set();
 function renderPath(){
   const wrap = document.getElementById('pathWrap');
   wrap.innerHTML = '';
@@ -901,10 +1093,23 @@ function bodyHtml(section){
     });
     return html;
   }
+  if(section.type==='faq'){
+    let html = `<p class="intro-text">매뉴얼 1~8번 내용에서 자주 필요한 질문을 모았습니다. 질문을 누르면 답이 펼쳐집니다.</p>`;
+    section.faq.forEach(([q,a],i)=>{
+      html += `<details class="faq" data-faq="${i}" ${openFaq.has(i)?'open':''}><summary><span class="faq-q">Q</span>${q}</summary><div class="faq-a"><span class="faq-aa">A</span>${a}</div></details>`;
+    });
+    html += `<div class="divider-label">💬 질문·답변 등록</div><div id="qnaBox"></div>`;
+    return html;
+  }
   if(section.type==='report'){
     let html = `<p class="script-line">${section.formatLine}</p>`;
     html += `<div class="divider-label">보고 순서</div>`;
-    section.order.forEach(o=> html += `<p class="para">${o}</p>`);
+    section.order.forEach(o=>{
+      if(o.includes('영광')){
+        html += `<p class="para">${o} <button class="glory-btn ${gloryOpen?'on':''}" data-glory="1" aria-label="설명 보기" title="설명 보기">💬</button></p>`;
+        if(gloryOpen) html += GLORY_HTML;
+      } else html += `<p class="para">${o}</p>`;
+    });
     html += `<div class="divider-label">유의사항</div>`;
     section.rules.forEach((r,i)=>{
       const key = `${section.id}-r${i}`;
@@ -982,6 +1187,18 @@ function bodyHtml(section){
   return '';
 }
 
+let gloryOpen = false;
+const GLORY_HTML = `<div class="glory-note">
+<p><b>“모든 영광을 하나님께 돌립니다.”</b></p>
+<p>국립국어원 표준국어대사전에서 ‘돌리다’를 찾아보면, ‘돌리다’는 여러 가지 뜻을 가진 다의어입니다. 여기에서 “영광을 하나님께 돌립니다”라고 할 때의 ‘돌리다’는 어떤 일의 공로나 영광을 다른 사람이나 대상에게 넘기다라는 의미로 사용된 것으로 볼 수 있습니다.</p>
+<p>사전에서도 ‘돌리다’를 ‘잘되거나 못된 일의 원인이나 책임을 다른 사람이나 대상에게 넘기다’라는 의미로 풀이하고 있습니다. 실제로 다음과 같이 사용됩니다.</p>
+<ul><li>공을 동료에게 돌리다.</li><li>책임을 남에게 돌리다.</li><li>모든 영광을 부모님께 돌리다.</li><li>나라의 명맥을 잇게 한 공은 마땅히 무인에게 돌려야 할 것이다.</li></ul>
+<p>따라서 “모든 영광을 하나님께 돌립니다”라는 표현은 단순히 영광을 하나님께 ‘넘긴다’는 뜻이 아니라, 내가 이룬 성취나 좋은 결과를 나의 공로로 여기지 않고, 그 모든 것이 하나님의 은혜로 이루어졌음을 인정하며 하나님께 영광을 드린다는 의미입니다.</p>
+<p>다시 말해,<br>“이 일의 영광과 공로는 나에게 있지 않고 하나님께 있습니다. 그러므로 모든 영광을 하나님께 드립니다.”<br>라는 신앙의 고백이라고 할 수 있습니다.</p>
+<p>참고로 ‘돌리다’에는 다음과 같이 여러 가지 뜻이 있습니다. 다들 아시는,</p>
+<ul><li>물체를 회전시키다: 팽이를 돌리다.</li><li>방향을 바꾸다: 고개를 돌리다.</li><li>기계를 작동시키다: 세탁기를 돌리다.</li><li>공로나 영광 등을 다른 대상에게 넘기다: 모든 영광을 하나님께 돌리다.</li></ul>
+<p>따라서 “모든 영광을 하나님께 돌립니다”에서 ‘돌립니다’는 ‘영광의 주체와 공로가 하나님께 있음을 인정하고 하나님께 영광을 드린다’는 뜻으로 이해하면 가장 자연스럽습니다.</p>
+</div>`;
 let focusMode = false;
 const ICON_EXPAND = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
 const ICON_SHRINK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>';
@@ -1004,7 +1221,7 @@ function render(){
         <div class="badge">${s.id}</div>
         <div class="head-text">
           <div class="head-title">${s.title}</div>
-          <div class="head-meta">교재 ${s.page}${prog? ` · ${prog.done}/${prog.total} 체크완료`:''}</div>
+          <div class="head-meta">${s.type==='faq'?`자주 묻는 질문 ${s.faq.length}개`:`교재 ${s.page}`}${prog? ` · ${prog.done}/${prog.total} 체크완료`:''}</div>
         </div>
         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
       </button>
@@ -1039,6 +1256,11 @@ function render(){
       }
     });
   });
+  main.querySelectorAll('[data-glory]').forEach(b=> b.addEventListener('click', ()=>{ gloryOpen = !gloryOpen; render(); }));
+  main.querySelectorAll('details[data-faq]').forEach(d=> d.addEventListener('toggle', ()=>{
+    const i = +d.dataset.faq; if(d.open) openFaq.add(i); else openFaq.delete(i);
+  }));
+  if(document.getElementById('qnaBox')) initQna();
   applyPrefs();
   main.querySelectorAll('.form-ref img').forEach(img=>{
     img.addEventListener('click', ()=>{
