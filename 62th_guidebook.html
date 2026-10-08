@@ -1407,6 +1407,15 @@
 
   const hwFilesByWeek = {};
 
+  // 파일명·링크를 HTML에 넣기 전에 이스케이프 (악성 파일명 방지)
+  function escHtml(v) {
+    return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function safeUrl(u) {
+    return /^https:\/\//i.test(String(u || '')) ? String(u) : '#';
+  }
+  const HW_MAX_BYTES = 20 * 1024 * 1024; // 업로드 최대 20MB
+
   function setDownloadBtnState(week) {
     const dlBtn = document.getElementById(`hwDlBtn-${week}`);
     if (!dlBtn) return;
@@ -1424,7 +1433,7 @@
     // 파일이 여러 개면 각각 새 탭으로 모두 열어 개별 다운로드합니다.
     files.forEach(f => {
       if (f && f.fileUrl) {
-        window.open(buildDownloadUrl(f.fileUrl, f.fileId), '_blank', 'noopener');
+        window.open(safeUrl(buildDownloadUrl(f.fileUrl, f.fileId)), '_blank', 'noopener');
         recordHwDownload(f.fileId, f.fileName);
       }
     });
@@ -1508,13 +1517,13 @@
     const dtLabel = dt && !isNaN(dt)
       ? `${dt.getMonth()+1}/${dt.getDate()} ${String(dt.getHours()).padStart(2,'0')}:${String(dt.getMinutes()).padStart(2,'0')}`
       : '';
-    const downloadUrl = buildDownloadUrl(item.fileUrl, item.fileId);
-    const safeName = String(item.fileName).replace(/"/g, '&quot;');
-    const dlCount = item.downloadCount || 0;
+    const fileUrl = safeUrl(item.fileUrl);
+    const downloadUrl = safeUrl(buildDownloadUrl(item.fileUrl, item.fileId));
+    const dlCount = Number(item.downloadCount) || 0;
     return `
       <div class="hw-file-item">
-        <a href="${item.fileUrl}" target="_blank" rel="noopener" class="hw-file-link"
-           data-file-url="${item.fileUrl}" data-download-url="${downloadUrl}" data-file-name="${safeName}" data-file-id="${item.fileId || ''}">📎 ${item.fileName}</a>
+        <a href="${escHtml(fileUrl)}" target="_blank" rel="noopener" class="hw-file-link"
+           data-file-url="${escHtml(fileUrl)}" data-download-url="${escHtml(downloadUrl)}" data-file-name="${escHtml(item.fileName)}" data-file-id="${escHtml(item.fileId || '')}">📎 ${escHtml(item.fileName)}</a>
         <span class="hw-file-meta">${dtLabel}</span>
         <span class="hw-file-count">⬇${dlCount}</span>
       </div>
@@ -1564,6 +1573,7 @@
     const status = document.getElementById(`hwStatus-${week}`);
     const file = input.files[0];
     if (!file) { status.textContent = '파일을 먼저 선택해 주세요.'; return; }
+    if (file.size > HW_MAX_BYTES) { status.textContent = '⚠️ 파일이 너무 큽니다. 20MB 이하로 올려 주세요.'; return; }
     if (!HW_GAS_URL || HW_GAS_URL.indexOf('YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') === 0) {
       status.textContent = '⚠️ 아직 구글 시트 연동 주소가 설정되지 않았습니다.';
       return;

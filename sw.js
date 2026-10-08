@@ -1,4 +1,4 @@
-const CACHE_NAME = '62th-guidebook-v1';
+const CACHE_NAME = '62th-guidebook-v2';
 const CORE_ASSETS = [
   './index.html',
   './62th_guidebook.html',

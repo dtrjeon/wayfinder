@@ -16,7 +16,7 @@
  * 동작 방식
  * - 파일은 구글 드라이브의 "62기_주차별과제 > N주" 폴더에 저장됩니다.
  * - 파일마다 "링크가 있는 모든 사용자에게 보기 허용"으로 공유 설정됩니다.
- * - 업로드 기록(업로드일시, 주차, 파일명, 파일링크)은
+ * - 업로드 기록(업로드일시, 주차, 파일명, 파일링크, 파일ID, 다운로드수)은
  *   위에서 지정한 스프레드시트의 "주차별과제" 시트에 한 줄씩 쌓입니다.
  */
 
@@ -47,6 +47,9 @@ function doPost(e) {
   if (data.action === 'uploadHomework') {
     return jsonOutput(uploadHomeworkFile(data));
   }
+  if (data.action === 'recordDownload') {
+    return jsonOutput(recordDownload(data));
+  }
   return jsonOutput({ success: false, message: 'invalid action' });
 }
 
@@ -55,10 +58,15 @@ function getSheet() {
   var sheet = ss.getSheetByName(SHEET_NAME);
   if (!sheet) {
     sheet = ss.insertSheet(SHEET_NAME);
-    sheet.appendRow(['업로드일시', '주차', '파일명', '파일링크']);
+    sheet.appendRow(['업로드일시', '주차', '파일명', '파일링크', '파일ID', '다운로드수']);
     sheet.setFrozenRows(1);
   }
   return sheet;
+}
+
+function extractFileId(url) {
+  var m = String(url || '').match(/\/d\/([a-zA-Z0-9_-]+)/) || String(url || '').match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  return m ? m[1] : '';
 }
 
 function getHomeworkList() {
@@ -66,7 +74,7 @@ function getHomeworkList() {
   var lastRow = sheet.getLastRow();
   if (lastRow < 2) return [];
 
-  var values = sheet.getRange(2, 1, lastRow - 1, 4).getValues();
+  var values = sheet.getRange(2, 1, lastRow - 1, 6).getValues();
   return values
     .filter(function (row) { return row[2]; }) // 파일명이 있는 행만
     .map(function (row) {
@@ -74,9 +82,38 @@ function getHomeworkList() {
         uploadedAt: row[0] instanceof Date ? row[0].toISOString() : String(row[0]),
         week: row[1],
         fileName: row[2],
-        fileUrl: row[3]
+        fileUrl: row[3],
+        fileId: row[4] || extractFileId(row[3]),
+        downloadCount: Number(row[5]) || 0
       };
     });
+}
+
+// 다운로드 횟수 +1 (동시 요청 충돌 방지를 위해 잠금 사용)
+function recordDownload(data) {
+  var fileId = String(data.fileId || '');
+  if (!fileId) return { success: false, message: 'fileId가 없습니다.' };
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    var sheet = getSheet();
+    var lastRow = sheet.getLastRow();
+    if (lastRow < 2) return { success: false, message: '기록이 없습니다.' };
+    var values = sheet.getRange(2, 1, lastRow - 1, 6).getValues();
+    for (var i = 0; i < values.length; i++) {
+      var id = values[i][4] || extractFileId(values[i][3]);
+      if (id === fileId) {
+        var count = (Number(values[i][5]) || 0) + 1;
+        sheet.getRange(i + 2, 5, 1, 2).setValues([[id, count]]);
+        return { success: true, fileId: fileId, downloadCount: count };
+      }
+    }
+    return { success: false, message: '파일을 찾을 수 없습니다.' };
+  } catch (err) {
+    return { success: false, message: err.message };
+  } finally {
+    lock.releaseLock();
+  }
 }
 
 function getOrCreateFolder(parent, name) {
@@ -89,6 +126,12 @@ function uploadHomeworkFile(data) {
     if (!data.fileName || !data.base64 || !data.week) {
       return { success: false, message: '필수 값이 누락되었습니다.' };
     }
+    var weekNum = Number(data.week);
+    if (!(weekNum >= 1 && weekNum <= 14) || weekNum % 1 !== 0) {
+      return { success: false, message: '주차 값이 올바르지 않습니다.' };
+    }
+    data.week = weekNum;
+    data.fileName = String(data.fileName).slice(0, 150);
 
     var rootFolder = getOrCreateFolder(DriveApp.getRootFolder(), DRIVE_ROOT_FOLDER_NAME);
     var weekFolder = getOrCreateFolder(rootFolder, data.week + '주');
@@ -102,13 +145,15 @@ function uploadHomeworkFile(data) {
     var now = new Date();
 
     var sheet = getSheet();
-    sheet.appendRow([now, data.week, data.fileName, url]);
+    sheet.appendRow([now, data.week, data.fileName, url, file.getId(), 0]);
 
     return {
       success: true,
       week: data.week,
       fileName: data.fileName,
       fileUrl: url,
+      fileId: file.getId(),
+      downloadCount: 0,
       uploadedAt: now.toISOString()
     };
   } catch (err) {
